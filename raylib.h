@@ -246,6 +246,18 @@ Vector2 Tween(Vector2 start, Vector2 end, float factor){
     return result;
 }
 
+float Tween(float start, float end, float factor){
+    float result;
+    if(end > start){
+        result = start + factor;
+        if(result > end) result = end;
+    }else if(end < start){
+        result = start - factor;
+        if(result < end) result = end;
+    }
+    return result;
+}
+
 //return the sum of each axis as a Vector2
 Vector2 vectorAddition(Vector2 a, Vector2 b){return{a.x + b.x, a.y + b.y};}
 Vector2 vectorAddition(Vector2 a, float b){return{a.x + b, a.y + b};}

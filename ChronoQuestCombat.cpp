@@ -192,12 +192,18 @@ int main(void)
               //sets up for the enemies turn
               turn = false;
               enemyWaitTimer = 0.1;
-              attackType = 0;
+              
           }else{
             //if the timer isnt up to the target time add to it 
           } timerATK += GetFrameTime();
           //move ui elements off screen to avoid clutering the screen
-          PlayerTarget = {400, 0};
+          if(attackType == 1){
+            PlayerTarget = {400, 100};
+          }else if(attackType == 2){
+              PlayerTarget = {400, 0};
+          }
+          attackType = 0;
+         // PlayerTarget = {400, 0};
           zoomTarget = 1.5;
           ui.BarPos = {-100, -300};
           ui.pos = {1300, 1100};
@@ -256,8 +262,14 @@ int main(void)
       //linear interpolate the camera to its target zoom level so its movement is smooth and not sudden
       camera.zoom = lerp(camera.zoom, zoomTarget, 0.03);
       //tween the player and enemy position to their  target to move them overtime and smoothly
-      player.position = Tween(player.position, PlayerTarget, 10);
-      enemy.position = Tween(enemy.position, EnemyTarget, 10);
+      Vector2 temp = lerpV(player.position, PlayerTarget, 0.1);
+      temp.x * GetFrameTime();
+      temp.y * GetFrameTime();
+      Vector2 tempE = lerpV(enemy.position, EnemyTarget, 0.1);
+      tempE.x * GetFrameTime();
+      tempE.y * GetFrameTime();
+      player.position = temp;
+      enemy.position = tempE;
 
       // Draw, where the scene actually gets rendered and drawn out
         

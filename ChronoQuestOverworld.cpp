@@ -174,7 +174,7 @@ int main(void){
                 if (editor){
                     for (int i = 0; i < walls.size(); i++){
                         DrawRectangleRec({walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height, 20, 20}, GREEN);
-                        if (CheckCollisionPointRec({GetMouseX(), GetMouseY()}, {walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height,20,20})){
+                        if (CheckCollisionPointRec({GetMouseX(), GetMouseY()}, {walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height,20,20}) && IsMouseButtonPressed(0)){
                             resizing = true;
                             index = i;
                             return 0;
@@ -186,8 +186,8 @@ int main(void){
                     }
                     
                     if(IsMouseButtonReleased(0)){
-                        resizing = false;
-                        index = -1;
+                        //resizing = false;
+                        //index = -1;
                     }
                 
                 }
