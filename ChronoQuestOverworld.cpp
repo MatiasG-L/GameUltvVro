@@ -36,7 +36,9 @@ Vector2 playerSpawn;
 template <typename T> void coll(float distance, char axis, std::vector<T> *toCheck);
 void savelevel (std::vector<Wall> Objcts, Player);
 void loadlevel (std::string map);
+Vector2 mousePositionWorld;
 
+bool editor = false;
 int main(void){
     
 
@@ -58,7 +60,6 @@ int main(void){
     */
     bool dragging = false;
     bool resizing = false;
-    bool editor = false;
     int index = -1;
 
     // Initialization
@@ -90,6 +91,7 @@ int main(void){
     
     while (!WindowShouldClose()){    // Detect window close button or ESC key
     
+        mousePositionWorld = GetScreenToWorld2D({GetMouseX(), GetMouseY()}, camera);
         
         camera.target = lerpV(camera.target, {player.position.x + player.width / 2, player.position.y + player.height / 2}, 0.2);
        
@@ -173,20 +175,30 @@ int main(void){
                 
                 if (editor){
                     for (int i = 0; i < walls.size(); i++){
-                        DrawRectangleRec({walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height, 20, 20}, GREEN);
-                        if (CheckCollisionPointRec({GetMouseX(), GetMouseY()}, {walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height,20,20})){
+                        DrawRectangleRec({walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height, 20, 20}, BLUE);
+                        if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height,20,20}) && IsMouseButtonPressed(0)){
                             resizing = true;
-                            index = i;
-                            return 0;
+                            index = i;                            
+                        }
+                        if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x, walls.at(i).position.y, walls.at(i).width, walls.at(i).height}) && IsMouseButtonPressed(0)){
+                            dragging = true;
+                            index = i;                            
                         }
                     }
+                        
                     if (resizing){
                         walls[index].width += GetMouseDelta().x;
                         walls[index].height += GetMouseDelta().y;
                     }
                     
+                    if (dragging){
+                        walls[index].position.x += GetMouseDelta().x;
+                        walls[index].position.y += GetMouseDelta().y;
+                    }
+                    
                     if(IsMouseButtonReleased(0)){
                         resizing = false;
+                        dragging = false;
                         index = -1;
                     }
                 
@@ -215,6 +227,7 @@ int main(void){
 
     return 0;
 }
+
 //function for collision handleling that takes paramaters for the distance desired to move and the axis on which to move
 template<typename T> void coll(float distance, char axis, std::vector<T> *toCheck){
     //boolean to keep trabk of whether a collision was detected in th function
@@ -224,7 +237,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
         //loops through a vector of Wall objects to check for collision
         for(int i = 0; i < toCheck->size(); i++){
             //uses raylibs built in collision detection functino given two Rec objects as paramaters 
-            if (CheckCollisionRecs({player.position.x + distance, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y, toCheck->at(i).width, toCheck->at(i).height})){
+            if (CheckCollisionRecs({player.position.x + distance, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y, toCheck->at(i).width, toCheck->at(i).height}) && !editor){
                 
                 
                 //determines if the players starting position is on the left of the objected collided with
@@ -266,7 +279,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
         //loops through a vector of Wall objects to check for collision
         for(int i = 0; i < toCheck->size(); i++){
             //uses raylibs built in collision detection function given two Rec objects as paramaters 
-            if (CheckCollisionRecs({player.position.x, player.position.y + distance, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width, toCheck->at(i).height})){
+            if (CheckCollisionRecs({player.position.x, player.position.y + distance, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width, toCheck->at(i).height}) && !editor){
                 //determines if the players starting position is above of the objected collided with
                 if (player.position.y < toCheck->at(i).position.y + toCheck->at(i).height / 2){
                     //checks if the wall is moveable and pushes it
@@ -461,7 +474,6 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                 std::cout << "\n";
                 walls = obj;
                
-                
             }catch(...){
               walls = obj;
               objs = true;
