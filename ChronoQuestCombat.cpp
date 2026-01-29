@@ -198,9 +198,9 @@ int main(void)
           } timerATK += GetFrameTime();
           //move ui elements off screen to avoid clutering the screen
           if(attackType == 1){
-            PlayerTarget = {400, 100};
+            PlayerTarget = {400, 200};
           }else if(attackType == 2){
-              PlayerTarget = {400, 0};
+              PlayerTarget = {450, 0};
           }
           attackType = 0;
          // PlayerTarget = {400, 0};
