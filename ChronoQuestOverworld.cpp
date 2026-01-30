@@ -227,7 +227,6 @@ int main(void){
 
     return 0;
 }
-
 //function for collision handleling that takes paramaters for the distance desired to move and the axis on which to move
 template<typename T> void coll(float distance, char axis, std::vector<T> *toCheck){
     //boolean to keep trabk of whether a collision was detected in th function
@@ -237,7 +236,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
         //loops through a vector of Wall objects to check for collision
         for(int i = 0; i < toCheck->size(); i++){
             //uses raylibs built in collision detection functino given two Rec objects as paramaters 
-            if (CheckCollisionRecs({player.position.x + distance, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y, toCheck->at(i).width, toCheck->at(i).height}) && !editor){
+            if (CheckCollisionRecs({player.position.x + distance, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y, toCheck->at(i).width, toCheck->at(i).height})){
                 
                 
                 //determines if the players starting position is on the left of the objected collided with
@@ -279,6 +278,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
         //loops through a vector of Wall objects to check for collision
         for(int i = 0; i < toCheck->size(); i++){
             //uses raylibs built in collision detection function given two Rec objects as paramaters 
+            if (CheckCollisionRecs({player.position.x, player.position.y + distance, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width, toCheck->at(i).height})){
                 //determines if the players starting position is above of the objected collided with
                 if (player.position.y < toCheck->at(i).position.y + toCheck->at(i).height / 2){
                     //checks if the wall is moveable and pushes it
@@ -305,8 +305,10 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                 }
             }   
         }
+    
+    
     }
-    }
+    
     // code where wall collision is preformed agianst other walls (pushable walls)
     for (int i = 0; i < toCheck->size(); i++){
         for (int j = 0; j < toCheck->size(); j++){
@@ -319,10 +321,11 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                        //splits the way collision is handled depending if the wall is on the left or right of its collision respectivly
                        if (toCheck->at(i).position.x + (toCheck->at(i).width / 2) < toCheck->at(j).position.x + (toCheck->at(j).width / 2)){
                            toCheck->at(i).position.x = toCheck->at(j).position.x - toCheck->at(i).width;
-                            if (CheckCollisionRecs({player.position.x, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width,toCheck->at(i).height})){
-                                player.position.x = toCheck->at(i).position.x - player.width;
-                                collision = true;
-                            }
+                           if (CheckCollisionRecs({player.position.x, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width,toCheck->at(i).height})){
+                           //player.position.x = toCheck->at(i).position.x - player.width;
+                            player.position.x = toCheck->at(i).position.x - player.width;
+                            collision = true;
+                           }
                        //splits the way collision is handled depending if the wall is on the left or right of its collision respectivly
                        }else{
                            toCheck->at(i).position.x = toCheck->at(j).position.x + toCheck->at(i).width;
@@ -470,6 +473,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                 std::cout << "\n";
                 walls = obj;
                
+                
             }catch(...){
               walls = obj;
               objs = true;
