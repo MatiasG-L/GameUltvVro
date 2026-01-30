@@ -169,8 +169,22 @@ int main(void){
                 
                 
                 for(int i = 0; i < walls.size(); i++){
-                    if(editor) DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height,walls[i].sqrColor);
-                    else DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height,walls[i].sqrColor);
+                    if(editor){
+                        if(walls.at(i).moveable){
+                            DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height,GREEN);
+                        }else{
+                            DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height,BLUE);
+                        }
+                        
+                    } 
+                    else{
+                        if(walls.at(i).moveable){
+                            DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, GREEN);
+                        }else{
+                            DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, BLUE);
+                        }
+                        
+                    }
                 }
                 
                 if (editor){
