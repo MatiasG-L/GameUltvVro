@@ -93,57 +93,69 @@ int main(void){
     
         mousePositionWorld = GetScreenToWorld2D({GetMouseX(), GetMouseY()}, camera);
         
-        camera.target = lerpV(camera.target, {player.position.x + player.width / 2, player.position.y + player.height / 2}, 0.2);
+        if(!editor){
+            camera.target = lerpV(camera.target, {player.position.x + player.width / 2, player.position.y + player.height / 2}, 0.2);
+        }else if(IsMouseButtonDown(2)){
+            camera.target = vectorAddition(camera.target, {-GetMouseDelta().x, -GetMouseDelta().y});
+        }
+        
        
         
         if (IsKeyPressed(KEY_R)){
             editor = !editor;
         }
        
+       
         
-         if (IsKeyDown(KEY_W)){
-            coll<Npc>(-10, 'y', &npcs);
-            coll<Wall>(-10, 'y', &walls);
-          }
-        else if (IsKeyDown(KEY_A)){
-            coll<Npc>(-10, 'x', &npcs);
-            coll<Wall>(-10, 'x', &walls);
+        if(!editor){
+             if (IsKeyDown(KEY_W)){
+                coll<Npc>(-10, 'y', &npcs);
+                coll<Wall>(-10, 'y', &walls);
+              }
+            else if (IsKeyDown(KEY_A)){
+                coll<Npc>(-10, 'x', &npcs);
+                coll<Wall>(-10, 'x', &walls);
+                
+              }
+            else if (IsKeyDown(KEY_S)){
+                coll<Npc>(10, 'y', &npcs);
+                coll<Wall>(10, 'y', &walls);
+                
+              }
+            else if (IsKeyDown(KEY_D)){
+                coll<Npc>(10, 'x', &npcs);
+                coll<Wall>(10, 'x', &walls);
+                
+              }
+            else if (IsKeyDown(KEY_UP)){
+                coll<Npc>(-10, 'y', &npcs);
+                coll<Wall>(-10, 'y', &walls);
+                
+              }
+            else if (IsKeyDown(KEY_LEFT)){
+                coll<Npc>(-10, 'x', &npcs);
+                coll<Wall>(-10, 'x', &walls);
+                
+              }
+            else if (IsKeyDown(KEY_DOWN)){
+                coll<Npc>(10, 'y', &npcs);
+                coll<Wall>(10, 'y', &walls);
+                
+              }
+            else if (IsKeyDown(KEY_RIGHT)){
+                coll<Npc>(10, 'x', &npcs);
+                coll<Wall>(10, 'x', &walls);
+                
+            }else{
+                coll<Npc>(0, 'x', &npcs);
+                coll<Npc>(0, 'y', &npcs);
+                coll<Wall>(0, 'x', &walls);
+                coll<Wall>(0, 'y', &walls);
+            }
             
-          }
-        else if (IsKeyDown(KEY_S)){
-            coll<Npc>(10, 'y', &npcs);
-            coll<Wall>(10, 'y', &walls);
-            
-          }
-        else if (IsKeyDown(KEY_D)){
-            coll<Npc>(10, 'x', &npcs);
-            coll<Wall>(10, 'x', &walls);
-            
-          }
-        else if (IsKeyDown(KEY_UP)){
-            coll<Npc>(-10, 'y', &npcs);
-            coll<Wall>(-10, 'y', &walls);
-            
-          }
-        else if (IsKeyDown(KEY_LEFT)){
-            coll<Npc>(-10, 'x', &npcs);
-            coll<Wall>(-10, 'x', &walls);
-            
-          }
-        else if (IsKeyDown(KEY_DOWN)){
-            coll<Npc>(10, 'y', &npcs);
-            coll<Wall>(10, 'y', &walls);
-            
-          }
-        else if (IsKeyDown(KEY_RIGHT)){
-            coll<Npc>(10, 'x', &npcs);
-            coll<Wall>(10, 'x', &walls);
-            
+        camera.zoom = 1.0f;    
         }else{
-            coll<Npc>(0, 'x', &npcs);
-            coll<Npc>(0, 'y', &npcs);
-            coll<Wall>(0, 'x', &walls);
-            coll<Wall>(0, 'y', &walls);
+            camera.zoom += GetMouseWheelMove()* 0.05;
         }
       if (IsKeyPressed(KEY_SPACE)){
           savelevel(walls, player);
@@ -342,7 +354,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                            }
                        //splits the way collision is handled depending if the wall is on the left or right of its collision respectivly
                        }else{
-                           toCheck->at(i).position.x = toCheck->at(j).position.x + toCheck->at(i).width;
+                           toCheck->at(i).position.x = toCheck->at(j).position.x + toCheck->at(j).width;
                            if (CheckCollisionRecs({player.position.x, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width,toCheck->at(i).height})){
                            //player.position.x = toCheck->at(i).position.x + toCheck->at(i).width;
                             player.position.x = toCheck->at(i).position.x + player.width ;
