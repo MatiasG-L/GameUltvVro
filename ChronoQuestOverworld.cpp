@@ -41,7 +41,7 @@ Vector2 mousePositionWorld;
 bool editor = false;
 int main(void){
     
-
+    
     /*
     Wall one(100, 100, {4500, 100}, BLUE);
     walls.push_back(one);
@@ -96,7 +96,7 @@ int main(void){
         if(!editor){
             camera.target = lerpV(camera.target, {player.position.x + player.width / 2, player.position.y + player.height / 2}, 0.2);
         }else if(IsMouseButtonDown(2)){
-            camera.target = vectorAddition(camera.target, {-GetMouseDelta().x, -GetMouseDelta().y});
+            camera.target = vectorAddition(camera.target, {-GetMouseDelta().x / camera.zoom, -GetMouseDelta().y / camera.zoom});
         }
         
        
@@ -213,13 +213,13 @@ int main(void){
                     }
                         
                     if (resizing){
-                        walls[index].width += GetMouseDelta().x;
-                        walls[index].height += GetMouseDelta().y;
+                        walls[index].width += GetMouseDelta().x / camera.zoom;
+                        walls[index].height += GetMouseDelta().y / camera.zoom;
                     }
                     
                     if (dragging){
-                        walls[index].position.x += GetMouseDelta().x;
-                        walls[index].position.y += GetMouseDelta().y;
+                        walls[index].position.x += GetMouseDelta().x / camera.zoom;
+                        walls[index].position.y += GetMouseDelta().y / camera.zoom ;
                     }
                     
                     if(IsMouseButtonReleased(0)){
@@ -373,9 +373,11 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                                 player.position.y = toCheck->at(i).position.y - player.height;
                                 collision = true;
                            }
+                           
+                           
                        //splits the way collision is handled depending if the wall is above or below of its collision respectivly
                        }else{
-                           toCheck->at(i).position.y = toCheck->at(j).position.y + toCheck->at(i).height;
+                           toCheck->at(i).position.y = toCheck->at(j).position.y + toCheck->at(j).height;
                            if (CheckCollisionRecs({player.position.x, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width,toCheck->at(i).height})){
                                 player.position.y = toCheck->at(i).position.y + player.height;
                                 collision = true;
