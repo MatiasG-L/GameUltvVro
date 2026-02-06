@@ -257,6 +257,7 @@ int main(void){
 template<typename T> void coll(float distance, char axis, std::vector<T> *toCheck){
     //boolean to keep trabk of whether a collision was detected in th function
     bool collision = false;
+    Vector2 temp = player.position;
     //collision on x axis
     if (axis == 'x'){
         //loops through a vector of Wall objects to check for collision
@@ -266,7 +267,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                 
                 
                 //determines if the players starting position is on the left of the objected collided with
-                if(player.position.x < toCheck->at(i).position.x + toCheck->at(i).width / 2){
+                if(player.position.x + player.width / 2 < toCheck->at(i).position.x + toCheck->at(i).width / 2){
                     if(toCheck->at(i).moveable){
                     
                     
@@ -306,7 +307,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
             //uses raylibs built in collision detection function given two Rec objects as paramaters 
             if (CheckCollisionRecs({player.position.x, player.position.y + distance, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width, toCheck->at(i).height})){
                 //determines if the players starting position is above of the objected collided with
-                if (player.position.y < toCheck->at(i).position.y + toCheck->at(i).height / 2){
+                if (player.position.y + player.height / 2 < toCheck->at(i).position.y + toCheck->at(i).height / 2){
                     //checks if the wall is moveable and pushes it
                     if (toCheck->at(i).moveable){
                         toCheck->at(i).position.y += (player.position.y + player.height) - toCheck->at(i).position.y + 10;
@@ -339,7 +340,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
     for (int i = 0; i < toCheck->size(); i++){
         for (int j = 0; j < toCheck->size(); j++){
             //only checks collision if the wall at i is a movable wall and, its not the same as wall at j and, if wall at i is closer to the player than wall at j
-            if (toCheck->at(i).moveable && j != i && abs(Distance(toCheck->at(i).position, player.position)) < abs(Distance(toCheck->at(j).position, player.position))){
+            if (toCheck->at(i).moveable && j != i && abs(Distance(vectorAddition(toCheck->at(i).position, {toCheck->at(i).width/2, toCheck->at(i).height/2}), player.center())) < abs(Distance(vectorAddition(toCheck->at(j).position, {toCheck->at(j).width/2, toCheck->at(j).height/2}), player.center()))){
                 //splits collision between the x and y axis respectivly 
                if (axis == 'x'){
                    //checks for a collision between wall at i and wall at j using raylibs built in CheckCollisionRecs() function
@@ -349,6 +350,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                            toCheck->at(i).position.x = toCheck->at(j).position.x - toCheck->at(i).width;
                            if (CheckCollisionRecs({player.position.x, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width,toCheck->at(i).height})){
                            //player.position.x = toCheck->at(i).position.x - player.width;
+                           
                             player.position.x = toCheck->at(i).position.x - player.width;
                             collision = true;
                            }
@@ -357,7 +359,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                            toCheck->at(i).position.x = toCheck->at(j).position.x + toCheck->at(j).width;
                            if (CheckCollisionRecs({player.position.x, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width,toCheck->at(i).height})){
                            //player.position.x = toCheck->at(i).position.x + toCheck->at(i).width;
-                            player.position.x = toCheck->at(i).position.x + player.width ;
+                            player.position.x = toCheck->at(i).position.x + toCheck->at(i).width;
                             collision = true;
                            }
                        }
@@ -367,7 +369,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                    //checks for a collision between wall at i and wall at j using raylibs built in CheckCollisionRecs() function
                    if (CheckCollisionRecs({toCheck->at(i).position.x, toCheck->at(i).position.y, toCheck->at(i).width, toCheck->at(i).height},{toCheck->at(j).position.x,    toCheck->at(j).position.y, toCheck->at(j).width, toCheck->at(j).height})){
                        //splits the way collision is handled depending if the wall is above or below of its collision respectivly
-                       if (toCheck->at(i).position.y - (toCheck->at(i).height / 2) < toCheck->at(j).position.y - (toCheck->at(j).height / 2)){
+                       if (toCheck->at(i).position.y + (toCheck->at(i).height / 2) < toCheck->at(j).position.y + (toCheck->at(j).height / 2)){
                            toCheck->at(i).position.y = toCheck->at(j).position.y - toCheck->at(i).height;
                            if (CheckCollisionRecs({player.position.x, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width,toCheck->at(i).height})){
                                 player.position.y = toCheck->at(i).position.y - player.height;
@@ -379,7 +381,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                        }else{
                            toCheck->at(i).position.y = toCheck->at(j).position.y + toCheck->at(j).height;
                            if (CheckCollisionRecs({player.position.x, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width,toCheck->at(i).height})){
-                                player.position.y = toCheck->at(i).position.y + player.height;
+                                player.position.y = toCheck->at(i).position.y + toCheck->at(i).height;
                                 collision = true;
                            }
                        }
