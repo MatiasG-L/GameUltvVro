@@ -38,10 +38,15 @@ void savelevel (std::vector<Wall> Objcts, Player);
 void loadlevel (std::string map);
 Vector2 mousePositionWorld;
 
+<<<<<<< Updated upstream
+=======
+bool placeMenu = false;
+>>>>>>> Stashed changes
 bool editor = false;
 int main(void){
     
     
+<<<<<<< Updated upstream
     /*
     Wall one(100, 100, {4500, 100}, BLUE);
     walls.push_back(one);
@@ -58,6 +63,25 @@ int main(void){
     Wall sv(100,100, {0,300}, true, GREEN);
     walls.push_back(sv);
     */
+=======
+     typedef struct{
+        Vector2 position;
+        Vector2 size;
+        int type;
+        Texture2D* extd;
+        std::string wallname;
+    }Placer;
+    
+    std::vector<Placer> builder;
+    
+    Placer moveableWall{{0,150}, {150,150}, 1, NULL, "push"};
+    Placer nonMoveableWall{{0,150}, {150,150}, 2, NULL, "nonpush"};
+    
+    builder.push_back(moveableWall);
+    builder.push_back(nonMoveableWall);
+    
+ 
+>>>>>>> Stashed changes
     bool dragging = false;
     bool resizing = false;
     int index = -1;
@@ -227,13 +251,72 @@ int main(void){
                         dragging = false;
                         index = -1;
                     }
+<<<<<<< Updated upstream
                 
+=======
+                     if (place){
+                        SetMouseCursor(3);
+                        if (IsMouseButtonPressed(0)){
+                            
+                                if (builder.at(indexc).type == 1){
+                                    Wall wallp(100,100, vectorAddition(mousePositionWorld, {-50,-50}), true, BLACK);
+                                    walls.push_back(wallp);
+                                   // editor = false;
+                                    place = false;
+                                }else if (builder.at(indexc).type == 2){
+                                    Wall wallp(100,100, vectorAddition(mousePositionWorld, {-50,-50}), BLACK);
+                                    walls.push_back(wallp);
+                                    //editor = false;
+                                    place = false;
+                                }
+
+                            
+                        }
+                    }else if (!place){
+                        SetMouseCursor(1);
+                    }
+                    for (int i = 0; i < walls.size(); i++){
+                        if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x, walls.at(i).position.y, walls.at(i).width, walls.at(i).height}) && IsMouseButtonPressed(1)){
+                            walls.erase(walls.begin() + i);
+                        }
+                    }
+>>>>>>> Stashed changes
                 }
+                
         
 
                 
                 EndMode2D();
                 //UI elements past this point
+<<<<<<< Updated upstream
+=======
+                if (editor){
+                    if (placeMenu && !place){
+                        DrawRectangle(100, 100 , 1400, 750, GRAY);
+                        for(int i = 0; i < builder.size(); i++){
+                            builder.at(i).position.x = (builder.at(i).size.x + 50) * (i + 1);
+                            DrawRectangleLines(builder.at(i).position.x, builder.at(i).position.y, builder.at(i).size.x, builder.at(i).size.y, BLACK);
+                            DrawText(builder.at(i).wallname.c_str(), builder.at(i).position.x, builder.at(i).position.y, 20 , RED );
+                            if (CheckCollisionPointRec({GetMouseX(), GetMouseY()}, {builder.at(i).position.x, builder.at(i).position.y, builder.at(i).size.x, builder.at(i).size.y})){
+                                builder.at(i).size.x = 160;
+                                builder.at(i).size.y = 160;
+                            }else{
+                                builder.at(i).size.x = 150;
+                                builder.at(i).size.y = 150;
+                            }
+                            if (IsMouseButtonPressed(0) && CheckCollisionPointRec({GetMouseX(), GetMouseY()}, {builder.at(i).position.x, builder.at(i).position.y, builder.at(i).size.x, builder.at(i).size.y})){
+                                place = true;
+                                indexc = i;
+                            }
+                        }
+
+                    }
+                    if (IsKeyPressed(KEY_EQUAL)){
+                        placeMenu = !placeMenu;
+                        
+                    }
+                }
+>>>>>>> Stashed changes
                 DrawFPS(0,0);
            
         //ends the drawing phase of the program     
