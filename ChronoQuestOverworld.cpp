@@ -38,32 +38,13 @@ void savelevel (std::vector<Wall> Objcts, Player);
 void loadlevel (std::string map);
 Vector2 mousePositionWorld;
 
-<<<<<<< Updated upstream
-=======
 bool placeMenu = false;
->>>>>>> Stashed changes
+
 bool editor = false;
+bool place = false;
 int main(void){
     
     
-<<<<<<< Updated upstream
-    /*
-    Wall one(100, 100, {4500, 100}, BLUE);
-    walls.push_back(one);
-    Wall two(300, 100, {-300, 250}, BLUE);
-    walls.push_back(two);
-    Wall three(100, 300, {450, -300}, BLUE);
-    walls.push_back(three);
-    Wall four(300, 300, {0, -150},true, GREEN);
-    walls.push_back(four);
-    Wall five(100, 100, {200, 200}, true, GREEN);
-    walls.push_back(five);
-    Wall six(100, 100, {300, 0}, true, GREEN);
-    walls.push_back(six);
-    Wall sv(100,100, {0,300}, true, GREEN);
-    walls.push_back(sv);
-    */
-=======
      typedef struct{
         Vector2 position;
         Vector2 size;
@@ -81,10 +62,10 @@ int main(void){
     builder.push_back(nonMoveableWall);
     
  
->>>>>>> Stashed changes
     bool dragging = false;
     bool resizing = false;
     int index = -1;
+    int indexc = -1;
 
     // Initialization
     //--------------------------------------------------------------------------------------
@@ -251,9 +232,7 @@ int main(void){
                         dragging = false;
                         index = -1;
                     }
-<<<<<<< Updated upstream
-                
-=======
+
                      if (place){
                         SetMouseCursor(3);
                         if (IsMouseButtonPressed(0)){
@@ -280,7 +259,7 @@ int main(void){
                             walls.erase(walls.begin() + i);
                         }
                     }
->>>>>>> Stashed changes
+
                 }
                 
         
@@ -288,8 +267,7 @@ int main(void){
                 
                 EndMode2D();
                 //UI elements past this point
-<<<<<<< Updated upstream
-=======
+
                 if (editor){
                     if (placeMenu && !place){
                         DrawRectangle(100, 100 , 1400, 750, GRAY);
@@ -316,7 +294,7 @@ int main(void){
                         
                     }
                 }
->>>>>>> Stashed changes
+
                 DrawFPS(0,0);
            
         //ends the drawing phase of the program     
