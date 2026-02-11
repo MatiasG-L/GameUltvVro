@@ -1,4 +1,5 @@
 #include "raylib.h"
+#pragma once
 #include <iostream>
 class Enemy{
     public:
@@ -17,11 +18,11 @@ class Enemy{
     int guard;
     int level;
     typedef struct{
-        int physicalAtk;
-        int specialAtk;
-        int defence;
-        int specialDefence;
-        int speed;
+        float physicalAtk;
+        float specialAtk;
+        float defence;
+        float specialDefence;
+        float speed;
     }Stats;
     
     Stats stats;

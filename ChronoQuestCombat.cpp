@@ -30,9 +30,9 @@
 // Program main entry point
 //------------------------------------------------------------------------------------
 //Player(int width, int height, Vector2 position, std::string name, int rank, int expRankUp, Stats stats, Suit suit)
-Player player(200, 400, {200, 400}, "Player", 3, 50, {100,100,10,10,10,10,10}, {10,10,10,10,100,100});
+Player player(200, 400, {200, 400}, "Player", 3, 50, {10000,10000,10,10,10,10,10}, {10000,10000,10,10,100,100});
 //Enemy(int width, int height, Vector2 position, std::string name, float maxHealth, int level, float maxStamina, float maxEnergy, Stats stats)
-Enemy enemy(150, 300, {1100, 100}, "Enemy01", 100, 5, 100, 100,{5,5,5,5,5});
+Enemy enemy(150, 300, {1100, 100}, "Enemy01", 100, 5, 100, 100,{5,5,100,0.1,5});
 
 
 
