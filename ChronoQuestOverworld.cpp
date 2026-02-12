@@ -37,14 +37,15 @@ template <typename T> void coll(float distance, char axis, std::vector<T> *toChe
 void savelevel (std::vector<Wall> Objcts, Player);
 void loadlevel (std::string map);
 Vector2 mousePositionWorld;
+
 bool placeMenu = false;
+
 bool editor = false;
 bool place = false;
 int main(void){
     
     
-
-    typedef struct{
+     typedef struct{
         Vector2 position;
         Vector2 size;
         int type;
@@ -60,6 +61,7 @@ int main(void){
     builder.push_back(moveableWall);
     builder.push_back(nonMoveableWall);
     
+ 
     bool dragging = false;
     bool resizing = false;
     int index = -1;
@@ -96,57 +98,69 @@ int main(void){
     
         mousePositionWorld = GetScreenToWorld2D({GetMouseX(), GetMouseY()}, camera);
         
-        camera.target = lerpV(camera.target, {player.position.x + player.width / 2, player.position.y + player.height / 2}, 0.2);
+        if(!editor){
+            camera.target = lerpV(camera.target, {player.position.x + player.width / 2, player.position.y + player.height / 2}, 0.2);
+        }else if(IsMouseButtonDown(2)){
+            camera.target = vectorAddition(camera.target, {-GetMouseDelta().x / camera.zoom, -GetMouseDelta().y / camera.zoom});
+        }
+        
        
         
         if (IsKeyPressed(KEY_R)){
             editor = !editor;
         }
        
+       
         
-         if (IsKeyDown(KEY_W)){
-            coll<Npc>(-10, 'y', &npcs);
-            coll<Wall>(-10, 'y', &walls);
-          }
-        else if (IsKeyDown(KEY_A)){
-            coll<Npc>(-10, 'x', &npcs);
-            coll<Wall>(-10, 'x', &walls);
+        if(!editor){
+             if (IsKeyDown(KEY_W)){
+                coll<Npc>(-10, 'y', &npcs);
+                coll<Wall>(-10, 'y', &walls);
+              }
+            else if (IsKeyDown(KEY_A)){
+                coll<Npc>(-10, 'x', &npcs);
+                coll<Wall>(-10, 'x', &walls);
+                
+              }
+            else if (IsKeyDown(KEY_S)){
+                coll<Npc>(10, 'y', &npcs);
+                coll<Wall>(10, 'y', &walls);
+                
+              }
+            else if (IsKeyDown(KEY_D)){
+                coll<Npc>(10, 'x', &npcs);
+                coll<Wall>(10, 'x', &walls);
+                
+              }
+            else if (IsKeyDown(KEY_UP)){
+                coll<Npc>(-10, 'y', &npcs);
+                coll<Wall>(-10, 'y', &walls);
+                
+              }
+            else if (IsKeyDown(KEY_LEFT)){
+                coll<Npc>(-10, 'x', &npcs);
+                coll<Wall>(-10, 'x', &walls);
+                
+              }
+            else if (IsKeyDown(KEY_DOWN)){
+                coll<Npc>(10, 'y', &npcs);
+                coll<Wall>(10, 'y', &walls);
+                
+              }
+            else if (IsKeyDown(KEY_RIGHT)){
+                coll<Npc>(10, 'x', &npcs);
+                coll<Wall>(10, 'x', &walls);
+                
+            }else{
+                coll<Npc>(0, 'x', &npcs);
+                coll<Npc>(0, 'y', &npcs);
+                coll<Wall>(0, 'x', &walls);
+                coll<Wall>(0, 'y', &walls);
+            }
             
-          }
-        else if (IsKeyDown(KEY_S)){
-            coll<Npc>(10, 'y', &npcs);
-            coll<Wall>(10, 'y', &walls);
-            
-          }
-        else if (IsKeyDown(KEY_D)){
-            coll<Npc>(10, 'x', &npcs);
-            coll<Wall>(10, 'x', &walls);
-            
-          }
-        else if (IsKeyDown(KEY_UP)){
-            coll<Npc>(-10, 'y', &npcs);
-            coll<Wall>(-10, 'y', &walls);
-            
-          }
-        else if (IsKeyDown(KEY_LEFT)){
-            coll<Npc>(-10, 'x', &npcs);
-            coll<Wall>(-10, 'x', &walls);
-            
-          }
-        else if (IsKeyDown(KEY_DOWN)){
-            coll<Npc>(10, 'y', &npcs);
-            coll<Wall>(10, 'y', &walls);
-            
-          }
-        else if (IsKeyDown(KEY_RIGHT)){
-            coll<Npc>(10, 'x', &npcs);
-            coll<Wall>(10, 'x', &walls);
-            
+        camera.zoom = 1.0f;    
         }else{
-            coll<Npc>(0, 'x', &npcs);
-            coll<Npc>(0, 'y', &npcs);
-            coll<Wall>(0, 'x', &walls);
-            coll<Wall>(0, 'y', &walls);
+            camera.zoom += GetMouseWheelMove()* 0.05;
         }
       if (IsKeyPressed(KEY_SPACE)){
           savelevel(walls, player);
@@ -192,8 +206,8 @@ int main(void){
                 
                 if (editor){
                     for (int i = 0; i < walls.size(); i++){
-                        DrawRectangleRec({walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height, 20, 20}, BLUE);
-                        if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height,20,20}) && IsMouseButtonPressed(0)){
+                        DrawRectangleRec({walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height, (20 / camera.zoom), (20 / camera.zoom)}, BLUE);
+                        if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height,(20 / camera.zoom), (20 / camera.zoom)}) && IsMouseButtonPressed(0)){
                             resizing = true;
                             index = i;                            
                         }
@@ -204,62 +218,60 @@ int main(void){
                     }
                         
                     if (resizing){
-                        walls[index].width += GetMouseDelta().x;
-                        walls[index].height += GetMouseDelta().y;
+                        walls[index].width += GetMouseDelta().x / camera.zoom;
+                        walls[index].height += GetMouseDelta().y / camera.zoom;
                     }
                     
                     if (dragging){
-                        walls[index].position.x += GetMouseDelta().x;
-                        walls[index].position.y += GetMouseDelta().y;
+                        walls[index].position.x += GetMouseDelta().x / camera.zoom;
+                        walls[index].position.y += GetMouseDelta().y / camera.zoom ;
                     }
                     
-                    if (IsMouseButtonReleased(0)){
+                    if(IsMouseButtonReleased(0)){
                         resizing = false;
                         dragging = false;
                         index = -1;
                     }
-                    if (place){
+
+                     if (place){
                         SetMouseCursor(3);
                         if (IsMouseButtonPressed(0)){
-                            
                                 if (builder.at(indexc).type == 1){
                                     Wall wallp(100,100, vectorAddition(mousePositionWorld, {-50,-50}), true, BLACK);
                                     walls.push_back(wallp);
-                                    editor = false;
                                     place = false;
+                                    placeMenu = false;
                                 }else if (builder.at(indexc).type == 2){
                                     Wall wallp(100,100, vectorAddition(mousePositionWorld, {-50,-50}), BLACK);
                                     walls.push_back(wallp);
-                                    editor = false;
                                     place = false;
-                                }
-                               
-                                /*Wall wall(100,100, vectorAddition(mousePositionWorld, {-50,-50}), BLACK);
-                                walls.push_back(wall);
-                                editor = false;
-                                place = false;*/
-                            
+                                    placeMenu = false;
+                                } 
                         }
-                    }else if (!place){
-                        SetMouseCursor(1);
                     }
                     for (int i = 0; i < walls.size(); i++){
                         if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x, walls.at(i).position.y, walls.at(i).width, walls.at(i).height}) && IsMouseButtonPressed(1)){
-                            
+                            walls.erase(walls.begin() + i);
                         }
                     }
+
                 }
+                if (!place){
+                        SetMouseCursor(1);
+                    }
         
 
                 
                 EndMode2D();
+                //UI elements past this point
+
                 if (editor){
                     if (placeMenu && !place){
                         DrawRectangle(100, 100 , 1400, 750, GRAY);
                         for(int i = 0; i < builder.size(); i++){
                             builder.at(i).position.x = (builder.at(i).size.x + 50) * (i + 1);
                             DrawRectangleLines(builder.at(i).position.x, builder.at(i).position.y, builder.at(i).size.x, builder.at(i).size.y, BLACK);
-                            DrawText(builder.at(i).wallname.c_str(), builder.at(i).position.x, builder.at(i).position.y );
+                            DrawText(builder.at(i).wallname.c_str(), builder.at(i).position.x, builder.at(i).position.y, 20 , RED );
                             if (CheckCollisionPointRec({GetMouseX(), GetMouseY()}, {builder.at(i).position.x, builder.at(i).position.y, builder.at(i).size.x, builder.at(i).size.y})){
                                 builder.at(i).size.x = 160;
                                 builder.at(i).size.y = 160;
@@ -279,7 +291,7 @@ int main(void){
                         
                     }
                 }
-                //UI elements past this point
+
                 DrawFPS(0,0);
            
         //ends the drawing phase of the program     
@@ -303,6 +315,7 @@ int main(void){
 template<typename T> void coll(float distance, char axis, std::vector<T> *toCheck){
     //boolean to keep trabk of whether a collision was detected in th function
     bool collision = false;
+    Vector2 temp = player.position;
     //collision on x axis
     if (axis == 'x'){
         //loops through a vector of Wall objects to check for collision
@@ -312,7 +325,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                 
                 
                 //determines if the players starting position is on the left of the objected collided with
-                if(player.position.x < toCheck->at(i).position.x + toCheck->at(i).width / 2){
+                if(player.position.x + player.width / 2 < toCheck->at(i).position.x + toCheck->at(i).width / 2){
                     if(toCheck->at(i).moveable){
                     
                     
@@ -352,7 +365,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
             //uses raylibs built in collision detection function given two Rec objects as paramaters 
             if (CheckCollisionRecs({player.position.x, player.position.y + distance, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width, toCheck->at(i).height})){
                 //determines if the players starting position is above of the objected collided with
-                if (player.position.y < toCheck->at(i).position.y + toCheck->at(i).height / 2){
+                if (player.position.y + player.height / 2 < toCheck->at(i).position.y + toCheck->at(i).height / 2){
                     //checks if the wall is moveable and pushes it
                     if (toCheck->at(i).moveable){
                         toCheck->at(i).position.y += (player.position.y + player.height) - toCheck->at(i).position.y + 10;
@@ -385,7 +398,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
     for (int i = 0; i < toCheck->size(); i++){
         for (int j = 0; j < toCheck->size(); j++){
             //only checks collision if the wall at i is a movable wall and, its not the same as wall at j and, if wall at i is closer to the player than wall at j
-            if (toCheck->at(i).moveable && j != i && abs(Distance(toCheck->at(i).position, player.position)) < abs(Distance(toCheck->at(j).position, player.position))){
+            if (toCheck->at(i).moveable && j != i && abs(Distance(vectorAddition(toCheck->at(i).position, {toCheck->at(i).width/2, toCheck->at(i).height/2}), player.center())) < abs(Distance(vectorAddition(toCheck->at(j).position, {toCheck->at(j).width/2, toCheck->at(j).height/2}), player.center()))){
                 //splits collision between the x and y axis respectivly 
                if (axis == 'x'){
                    //checks for a collision between wall at i and wall at j using raylibs built in CheckCollisionRecs() function
@@ -395,15 +408,16 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                            toCheck->at(i).position.x = toCheck->at(j).position.x - toCheck->at(i).width;
                            if (CheckCollisionRecs({player.position.x, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width,toCheck->at(i).height})){
                            //player.position.x = toCheck->at(i).position.x - player.width;
+                           
                             player.position.x = toCheck->at(i).position.x - player.width;
                             collision = true;
                            }
                        //splits the way collision is handled depending if the wall is on the left or right of its collision respectivly
                        }else{
-                           toCheck->at(i).position.x = toCheck->at(j).position.x + toCheck->at(i).width;
+                           toCheck->at(i).position.x = toCheck->at(j).position.x + toCheck->at(j).width;
                            if (CheckCollisionRecs({player.position.x, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width,toCheck->at(i).height})){
                            //player.position.x = toCheck->at(i).position.x + toCheck->at(i).width;
-                            player.position.x = toCheck->at(i).position.x + player.width ;
+                            player.position.x = toCheck->at(i).position.x + toCheck->at(i).width;
                             collision = true;
                            }
                        }
@@ -413,17 +427,19 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                    //checks for a collision between wall at i and wall at j using raylibs built in CheckCollisionRecs() function
                    if (CheckCollisionRecs({toCheck->at(i).position.x, toCheck->at(i).position.y, toCheck->at(i).width, toCheck->at(i).height},{toCheck->at(j).position.x,    toCheck->at(j).position.y, toCheck->at(j).width, toCheck->at(j).height})){
                        //splits the way collision is handled depending if the wall is above or below of its collision respectivly
-                       if (toCheck->at(i).position.y - (toCheck->at(i).height / 2) < toCheck->at(j).position.y - (toCheck->at(j).height / 2)){
+                       if (toCheck->at(i).position.y + (toCheck->at(i).height / 2) < toCheck->at(j).position.y + (toCheck->at(j).height / 2)){
                            toCheck->at(i).position.y = toCheck->at(j).position.y - toCheck->at(i).height;
                            if (CheckCollisionRecs({player.position.x, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width,toCheck->at(i).height})){
                                 player.position.y = toCheck->at(i).position.y - player.height;
                                 collision = true;
                            }
+                           
+                           
                        //splits the way collision is handled depending if the wall is above or below of its collision respectivly
                        }else{
-                           toCheck->at(i).position.y = toCheck->at(j).position.y + toCheck->at(i).height;
+                           toCheck->at(i).position.y = toCheck->at(j).position.y + toCheck->at(j).height;
                            if (CheckCollisionRecs({player.position.x, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y,toCheck->at(i).width,toCheck->at(i).height})){
-                                player.position.y = toCheck->at(i).position.y + player.height;
+                                player.position.y = toCheck->at(i).position.y + toCheck->at(i).height;
                                 collision = true;
                            }
                        }
