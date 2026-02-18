@@ -54,24 +54,28 @@ class Enemy{
         }
     }
     float physicalDamageOut(){
+        std::cout << "Enemy Raw Damage Out: " << stats.physicalAtk + ((stats.physicalAtk * (level/100)) * 2) * (stamina / maxStamina) << "\n";
         return stats.physicalAtk + ((stats.physicalAtk * (level/100)) * 2) * (stamina / maxStamina);
     }
     
     float energyDamageOut(){
+        std::cout << "Enemy Raw Damage Out: " << stats.specialAtk + ((stats.specialAtk * (level/100)) * 2) * (energy / maxEnergy) << "\n";
         return stats.specialAtk + ((stats.specialAtk * (level/100)) * 2) * (energy / maxEnergy);
     }
     
     float damageCalc(int type, float incoming){
         float randomNum = GetRandomValue(0,100); 
-        std::cout << "\n" << randomNum << "\n";
-        if(randomNum <=8){
-            std::cout << "CRIT! @ " << randomNum << "\n";
+       std::cout << "\n";
+        if(randomNum <= 8){
+            std::cout << "PLAYER CRIT! @ " << randomNum << "\n";
             return incoming *1.7;
         }else{
             switch(type){
                 case 0:
+                    std::cout << "Damage taken enemy: " << incoming - ((stats.specialDefence/100) * (incoming * 0.75f)) << "\n";
                     return incoming - ((stats.specialDefence/100) * (incoming * 0.75f));
                 case 1:
+                    std::cout << "Damage taken enemy: " << incoming - (((stats.defence)/100) * (incoming * 0.75f)) << "\n";
                     return incoming - (((stats.defence)/100) * (incoming * 0.75f));
                 default:
                     return -1;
