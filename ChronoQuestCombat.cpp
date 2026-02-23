@@ -32,10 +32,10 @@
 //Player(int width, int height, Vector2 position, std::string name, int rank, int expRankUp, Stats stats, Suit suit)
 Player player(200, 400, {200, 400}, "Player", 3, 50, {10,10,10,10,10,10,10}, {10,10,10,10,100,100});
 //Enemy(int width, int height, Vector2 position, std::string name, float maxHealth, int level, float maxStamina, float maxEnergy, Stats stats)
-Enemy enemy(150, 300, {1100, 100}, "Enemy01", 100, 5, 100, 100,{5,5,100,0.1,5});
+Enemy enemy(150, 300, {1100, 100}, "Enemy01", 100, 5, 100, 100,{8,8,5,5,5});
 
 
-
+//physicalDamageOut
 int main(void)
 {
    
@@ -180,6 +180,9 @@ int main(void)
               attackANM = false;
               //depending on the attack type the enemy is damaged using a different type
               switch(attackType){
+                  case 0:
+                    std::cout << "ts aint working twan case and point";
+                    break;
                   case 1:
                     enemy.health -= enemy.damageCalc(0, player.specialDamageOut());
                     break;
@@ -187,14 +190,17 @@ int main(void)
                     enemy.health -= enemy.damageCalc(1, player.physicalDamageOut());
                     break;
                   default:
-                    enemy.health -= 10;
+                    //return -1;
+                    std::cout << "ts aint working twan";
+                    break;
               }
               //sets up for the enemies turn
               turn = false;
               enemyWaitTimer = 0.1;
               
           }else{
-            //if the timer isnt up to the target time add to it physicalDamageOut
+            //if the timer isnt up to the target time add to it physicalDamageOut damageCalc
+            
           } timerATK += GetFrameTime();
           //move ui elements off screen to avoid clutering the screen
           if(attackType == 1){
@@ -202,7 +208,7 @@ int main(void)
           }else if(attackType == 2){
               PlayerTarget = {450, 0};
           }
-          attackType = 0;
+          //attackType = 0;
          // PlayerTarget = {400, 0};
           zoomTarget = 1.5;
           ui.BarPos = {-100, -300};
@@ -231,6 +237,7 @@ int main(void)
       if(!turn) ui.pos = {1300, 1100};
       //similar to the players version this is for the enemies attack cycle
       if(!turn){
+          attackType = 0;
           if(enemyAttackTimer >= 1.2){
               enemyAttackTimer = 0;
               turn = true;

@@ -78,32 +78,35 @@ class Player{
     
     float specialDamageOut(){
         std::cout << "Player Raw Damage Out: " << (stats.specialAtk * (1 + suit.attack/2) * rank/(stats.specialAtk + suit.attack)) * ((suit.battery/suit.maxBattery) + 0.5) << "\n";
-        return (stats.specialAtk * (1 + suit.attack/2) * rank/(stats.specialAtk + suit.attack)) * ((suit.battery/suit.maxBattery) + 0.5);
+        return (stats.specialAtk * (1 + suit.attack/2) * rank/(stats.specialAtk + suit.attack)) * ((suit.battery/suit.maxBattery) + 0.5) * GetRandomValue(0.6,1.4);
     }
     
     float physicalDamageOut(){
-        std::cout << "Player Raw Damage Out: " << (stats.physicalAtk * (1 + suit.attack/2) * rank/(stats.physicalAtk + suit.attack)) * ((stamina/maxStamina) + 0.5) << "\n";
-        return (stats.physicalAtk * (1 + suit.attack/2) * rank/(stats.physicalAtk + suit.attack)) * ((stamina/maxStamina) + 0.5);
+        float temp = (stats.physicalAtk * (1 + suit.attack/2) * rank/(stats.physicalAtk + suit.attack)) * ((stamina/maxStamina) + 0.5) * GetRandomValue(0.6,1.4);
+        std::cout << "Player Raw Damage Out: " << temp << "\n";
+        return temp;
     }
     
     float damageCalc(int type, float incoming){
+        
         float randomNum = GetRandomValue(0,100); 
         std::cout << "\n";
 
         if(randomNum <= 8){
              std::cout << "ENEMY CRIT! @ " << randomNum << "\n";
+             std::cout << "Player damage taken: " << incoming *1.7 << "\n";
             return incoming *1.7;
         }else{
             switch(type){
                 case 0:
                     if(blockT == 0 && block) incoming /= 4;
                     else if(blockT == 1 && block) incoming -= incoming/4;
-                    std::cout << "Player damage taken: " << incoming - ((((stats.specialDefence + suit.defence)/2)/100) * (incoming * 0.75f));
+                    std::cout << "Player damage taken: " << incoming - ((((stats.specialDefence + suit.defence)/2)/100) * (incoming * 0.75f)) << "\n";
                     return incoming - ((((stats.specialDefence + suit.defence)/2)/100) * (incoming * 0.75f));
                 case 1:
                     if(blockT == 1 && block) incoming /= 4;
                     else if(blockT == 0 && block) incoming -= incoming/4;
-                    std::cout << "Player damage taken: " << incoming - ((((stats.defence + suit.defence)/2)/100) * (incoming * 0.75f));
+                    std::cout << "Player damage taken: " << incoming - ((((stats.defence + suit.defence)/2)/100) * (incoming * 0.75f)) << "\n";
                     return incoming - ((((stats.defence + suit.defence)/2)/100) * (incoming * 0.75f));
                 default:
                     return -1;
