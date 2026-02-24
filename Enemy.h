@@ -54,13 +54,13 @@ class Enemy{
         }
     }
     float physicalDamageOut(){
-        float temp = stats.physicalAtk + ((stats.physicalAtk * (level/100)) * 2) * (stamina / maxStamina)  * GetRandomValue(0.6,1.4);
+        float temp = stats.physicalAtk + ((stats.physicalAtk * (level/100)) * 2) * (stamina / maxStamina) * (float)GetRandomValue(0.6,1.4);
         std::cout << "Enemy Raw Damage Out: " << temp << "\n";
         return temp;
     }
     
     float energyDamageOut(){
-        float temp = stats.specialAtk + ((stats.specialAtk * (level/100)) * 2) * (energy / maxEnergy) * GetRandomValue(0.6,1.4);
+        float temp = stats.specialAtk + ((stats.specialAtk * (level/100)) * 2) * (energy / maxEnergy) * (float)GetRandomValue(0.6,1.4);
         std::cout << "Enemy Raw Damage Out: " << temp << "\n";
         return temp;
     }

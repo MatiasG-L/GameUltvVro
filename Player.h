@@ -27,20 +27,20 @@ class Player{
     //std::string currentAnimation = "NULL";
     
     typedef struct{
-        int physicalAtk;
-        int specialAtk;
-        int defence;
-        int specialDefence;
-        int speed;
-        int stamina;
-        int health;
+        float physicalAtk;
+        float specialAtk;
+        float defence;
+        float specialDefence;
+        float speed;
+        float stamina;
+        float health;
     }Stats;
 
     Stats stats;
     
     typedef struct{
-        int attack;
-        int defence;
+        float attack;
+        float defence;
         float shieldMax;
         float shieldHealth;
         float battery;
@@ -77,12 +77,13 @@ class Player{
     }
     
     float specialDamageOut(){
-        std::cout << "Player Raw Damage Out: " << (stats.specialAtk * (1 + suit.attack/2) * rank/(stats.specialAtk + suit.attack)) * ((suit.battery/suit.maxBattery) + 0.5) << "\n";
-        return (stats.specialAtk * (1 + suit.attack/2) * rank/(stats.specialAtk + suit.attack)) * ((suit.battery/suit.maxBattery) + 0.5) * GetRandomValue(0.6,1.4);
+        float temp = (stats.specialAtk * (1 + suit.attack/2) * (float)rank/(stats.specialAtk + suit.attack)) * ((suit.battery/suit.maxBattery) + 0.5) * (float)GetRandomValue(0.6,1.4);
+        std::cout << "Player Raw Damage Out: " << temp << "\n";
+        return temp;
     }
     
     float physicalDamageOut(){
-        float temp = (stats.physicalAtk * (1 + suit.attack/2) * rank/(stats.physicalAtk + suit.attack)) * ((stamina/maxStamina) + 0.5) * GetRandomValue(0.6,1.4);
+        float temp = (stats.physicalAtk * (1 + suit.attack/2) * (float)rank/(stats.physicalAtk + suit.attack)) * ((stamina/maxStamina) + 0.5) * (float)GetRandomValue(0.6,1.4);
         std::cout << "Player Raw Damage Out: " << temp << "\n";
         return temp;
     }
@@ -95,7 +96,7 @@ class Player{
         if(randomNum <= 8){
              std::cout << "ENEMY CRIT! @ " << randomNum << "\n";
              std::cout << "Player damage taken: " << incoming *1.7 << "\n";
-            return incoming *1.7;
+            return incoming *2.67;
         }else{
             switch(type){
                 case 0:
