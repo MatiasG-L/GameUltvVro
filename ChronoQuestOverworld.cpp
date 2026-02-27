@@ -26,15 +26,18 @@
 #include "raylib.h"
 #include "Player.h"
 #include "NPC.h"
+#include "Enemy.h"
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
 Player player(100, 100, {200, 400}, "Player", 3, 50, {100,100,10,10,10,10,10}, {10,10,10,10,100,100});
 std::vector<Wall> walls;
 std::vector<Npc> npcs; 
+std::vector<Enemy> enemies;
 Vector2 playerSpawn;
 template <typename T> void coll(float distance, char axis, std::vector<T> *toCheck);
 void savelevel (std::vector<Wall> Objcts, Player);
+void updWalls ();
 void loadlevel (std::string map);
 Vector2 mousePositionWorld;
 
@@ -57,10 +60,11 @@ int main(void){
     
     Placer moveableWall{{0,150}, {150,150}, 1, NULL, "push"};
     Placer nonMoveableWall{{0,150}, {150,150}, 2, NULL, "nonpush"};
+    Placer NPCenemy{{0,150}, {150, 150}, 3, NULL, "enemy"};
     
     builder.push_back(moveableWall);
     builder.push_back(nonMoveableWall);
-    
+    builder.push_back(NPCenemy);
  
     bool dragging = false;
     bool resizing = false;
@@ -94,9 +98,27 @@ int main(void){
     
     loadlevel("Map.txt");
     
-    while (!WindowShouldClose()){    // Detect window close button or ESC key
-    
+    while (!WindowShouldClose()){   
+
+        for (int i = 0; i < walls.size(); i++){
+            if (walls.at(i).positionNPC != NULL){
+                walls.at(i).position = *walls.at(i).positionNPC;
+            }
+        }
+
+    // Detect window close button or ESC key
+        for (int i = 0; i < walls.size(); i++){
+            if(walls.at(i).positionNPC != NULL){
+                walls.at(i).position = *walls.at(i).positionNPC;
+            }
+        }
         mousePositionWorld = GetScreenToWorld2D({GetMouseX(), GetMouseY()}, camera);
+        
+        
+        for(int i = 0; i < npcs.size(); i++){
+            walls.at(*npcs.at(i).wallp).positionNPC = &npcs.at(i).position;
+        }
+        
         
         if(!editor){
             camera.target = lerpV(camera.target, {player.position.x + player.width / 2, player.position.y + player.height / 2}, 0.2);
@@ -187,18 +209,25 @@ int main(void){
                 
                 for(int i = 0; i < walls.size(); i++){
                     if(editor){
-                        if(walls.at(i).moveable){
-                            DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height,GREEN);
-                        }else{
-                            DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height,BLUE);
+                        if(walls.at(i).moveable && walls.at(i).positionNPC == NULL){
+                            DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, GREEN);
+                            DrawText(std::to_string(walls.at(i).index).c_str(), walls[i].position.x, walls[i].position.y, 20 , BLACK );
+                        }else if (!walls.at(i).moveable && walls.at(i).positionNPC == NULL){
+                            DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, BLUE);
+                            DrawText(std::to_string(walls.at(i).index).c_str(), walls[i].position.x, walls[i].position.y, 20 , BLACK );
+                        }else if (walls.at(i).positionNPC != NULL){
+                            DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, RED);
+                            //DrawText(std::to_string(walls.at(i).index).c_str(), walls.at(i).positionNPC->x, walls.at(i).positionNPC->y, 20 , BLACK );
                         }
                         
                     } 
                     else{
-                        if(walls.at(i).moveable){
+                        if(walls.at(i).moveable && walls.at(i).positionNPC == NULL){
                             DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, GREEN);
-                        }else{
+                        }else if (!walls.at(i).moveable && walls.at(i).positionNPC == NULL){
                             DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, BLUE);
+                        }else if (walls.at(i).positionNPC != NULL){
+                            DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, RED);
                         }
                         
                     }
@@ -223,8 +252,14 @@ int main(void){
                     }
                     
                     if (dragging){
-                        walls[index].position.x += GetMouseDelta().x / camera.zoom;
-                        walls[index].position.y += GetMouseDelta().y / camera.zoom ;
+                        if (walls[index].positionNPC == NULL){
+                            walls[index].position.x += GetMouseDelta().x / camera.zoom;
+                            walls[index].position.y += GetMouseDelta().y / camera.zoom;
+                        }else{
+                            walls[index].positionNPC->x += GetMouseDelta().x / camera.zoom;
+                            walls[index].positionNPC->y += GetMouseDelta().y / camera.zoom ;
+                        }
+                        
                     }
                     
                     if(IsMouseButtonReleased(0)){
@@ -241,17 +276,29 @@ int main(void){
                                     walls.push_back(wallp);
                                     place = false;
                                     placeMenu = false;
+                                    updWalls();
                                 }else if (builder.at(indexc).type == 2){
                                     Wall wallp(100,100, vectorAddition(mousePositionWorld, {-50,-50}), BLACK);
                                     walls.push_back(wallp);
                                     place = false;
                                     placeMenu = false;
-                                } 
+                                    updWalls();
+                                }else if (builder.at(indexc).type == 3){
+                                    Npc enemy( 100, 100, vectorAddition(mousePositionWorld, {-50,-50}), "bussy", 'N');
+                                    npcs.push_back(enemy);
+                                    enemy.collider->index = walls.size();
+                                    walls.push_back(*enemy.collider);
+                                    enemy.wallp = &enemy.collider->index;
+                                    place = false;
+                                    placeMenu = false;
+                                    updWalls();
+                                }
                         }
                     }
                     for (int i = 0; i < walls.size(); i++){
                         if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x, walls.at(i).position.y, walls.at(i).width, walls.at(i).height}) && IsMouseButtonPressed(1)){
                             walls.erase(walls.begin() + i);
+                            updWalls();
                         }
                     }
 
@@ -320,6 +367,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
     if (axis == 'x'){
         //loops through a vector of Wall objects to check for collision
         for(int i = 0; i < toCheck->size(); i++){
+            
             //uses raylibs built in collision detection functino given two Rec objects as paramaters 
             if (CheckCollisionRecs({player.position.x + distance, player.position.y, player.width, player.height}, {toCheck->at(i).position.x, toCheck->at(i).position.y, toCheck->at(i).width, toCheck->at(i).height})){
                 
@@ -497,15 +545,21 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
             pushFile << player.position.x;
             pushFile << ", ";
             pushFile << player.position.y;
-            pushFile << ", ";
-            pushFile << player.width;
-            pushFile << ", ";
-            pushFile << player.height;
-            pushFile << ", ";
+            /*pushFile << ", ";
             pushFile << playerSpawn.x;
             pushFile << ", ";
-            pushFile << playerSpawn.y;
+            pushFile << playerSpawn.y;*/
             pushFile << "; \n";
+            
+            for(int i = 0; i < npcs.size(); i++){
+                    pushFile << "ENEMY\n";
+                    pushFile << npcs.at(i).position.x;
+                    pushFile << ", ";
+                    pushFile << npcs.at(i).position.y;
+                    pushFile << ", ";
+                    pushFile << *npcs.at(i).wallp;
+                    pushFile << "; \n";
+            }
         std::string add = pushFile.str();
         mapFile << add;
         mapFile.close();
@@ -527,24 +581,20 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
         int counter = 0;
         bool stop = false;
         bool objs = false;
-        
+        Vector2 vroPos;
         std::vector<Wall> obj;
-        
+        std::vector<Npc> npcTemp;
         int arrayPos = 0;
         int dataList[5];
         while(!objs){
 
             try{
                 while(mapContents.at(counter) != ',' && mapContents.at(counter) != ';'){
-                    if (mapContents.at(counter) == 'X') objs = true;
-                    else if (mapContents.at(counter) == ';') stop = true;
+                    if (mapContents.at(counter) == ';') stop = true;
                     else{
-                      counter++;
-                      std::cout << counter << ", ";                      
+                      counter++;                     
                     } 
                 }
-                if(objs)break;
-                std::cout << mapContents.substr(0,counter) << "\n";
                 
                 dataList[arrayPos] = std::stoi(mapContents.substr(0,counter));
                 if(arrayPos < 4)arrayPos++;
@@ -558,7 +608,6 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                 mapContents = mapContents.substr(counter + 2);
                 
                 counter = 0;
-                std::cout << "\n";
                 walls = obj;
                
                 
@@ -567,9 +616,69 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
               objs = true;
             }
         }
+
+        mapContents = mapContents.substr(8);
+        counter = 0;
+        while(mapContents.at(counter) != ',' && mapContents.at(counter) != ';'){
+            if (mapContents.at(counter) == ';') break;
+            else{
+                counter++;                 
+            } 
+        }
+        dataList[0] = std::stoi(mapContents.substr(0,counter));
+        mapContents = mapContents.substr(counter + 2);
+        counter = 0;
+        while(mapContents.at(counter) != ',' && mapContents.at(counter) != ';'){
+            if (mapContents.at(counter) == ';') break;
+            else{
+                counter++;                
+            } 
+        }
+        dataList[1] = std::stoi(mapContents.substr(0,counter));
         
-        
+        player.position = {dataList[0], dataList[1]};
+        mapContents = mapContents.substr(counter + 2);
+
+        counter = 0;
+        mapContents = mapContents.substr(6);
+        while(!objs){
+
+            try{
+                while(mapContents.at(counter) != ',' && mapContents.at(counter) != ';'){
+                    if (mapContents.at(counter) == ';') stop = true;
+                    else{
+                      counter++;                     
+                    } 
+                }
+                
+                dataList[arrayPos] = std::stoi(mapContents.substr(0,counter));
+                if(arrayPos < 3)arrayPos++;
+                else{
+                    arrayPos = 0;
+                    Npc enemy1(100, 100, {dataList[0], dataList[1]}, "EnemyFella", 'n');
+                    npcTemp.push_back(enemy1);
+                    enemy1.wallp = &walls.at(dataList[2]).index;
+                    walls.at(*enemy1.wallp).positionNPC = &enemy1.position;
+                  
+                }
+                
+                mapContents = mapContents.substr(counter + 2);
+                
+               npcs = npcTemp;
+                
+            }catch(...){
+              objs = true;
+              npcs = npcTemp;
+            }
+        }
+        for(int i = 0; i < npcs.size(); i++){
+            std::cout << "\n" <<npcs.at(i).wallp << "\n";
+        }
     }
     
-    
-    
+    void updWalls(){
+        for(int i = 0; i < walls.size(); i++){
+            walls.at(i).index = i;
+            
+        }
+    }
