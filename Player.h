@@ -77,13 +77,13 @@ class Player{
     }
     
     float specialDamageOut(){
-        float temp = (stats.specialAtk * (1 + suit.attack/2) * (float)rank/(stats.specialAtk + suit.attack)) * ((suit.battery/suit.maxBattery) + 0.5) * (float)GetRandomValue(0.6,1.4);
+        float temp = (stats.specialAtk * (1 + suit.attack/2) * (float)rank/(stats.specialAtk + suit.attack)) * ((suit.battery/suit.maxBattery) + 0.5) * (float)GetRandomValue(1,1.8);
         std::cout << "Player Raw Damage Out: " << temp << "\n";
         return temp;
     }
     
     float physicalDamageOut(){
-        float temp = (stats.physicalAtk * (1 + suit.attack/2) * (float)rank/(stats.physicalAtk + suit.attack)) * ((stamina/maxStamina) + 0.5) * (float)GetRandomValue(0.6,1.4);
+        float temp = (stats.physicalAtk * (1 + suit.attack/2) * (float)rank/(stats.physicalAtk + suit.attack)) * ((stamina/maxStamina) + 0.5) * (float)GetRandomValue(1,1.8);
         std::cout << "Player Raw Damage Out: " << temp << "\n";
         return temp;
     }
@@ -95,6 +95,7 @@ class Player{
 
         if(randomNum <= 8){
              std::cout << "ENEMY CRIT! @ " << randomNum << "\n";
+             std::cout << "\n";
              std::cout << "Player damage taken: " << incoming *1.7 << "\n";
             return incoming *2.67;
         }else{
@@ -103,11 +104,13 @@ class Player{
                     if(blockT == 0 && block) incoming /= 4;
                     else if(blockT == 1 && block) incoming -= incoming/4;
                     std::cout << "Player damage taken: " << incoming - ((((stats.specialDefence + suit.defence)/2)/100) * (incoming * 0.75f)) << "\n";
+                    
                     return incoming - ((((stats.specialDefence + suit.defence)/2)/100) * (incoming * 0.75f));
                 case 1:
                     if(blockT == 1 && block) incoming /= 4;
                     else if(blockT == 0 && block) incoming -= incoming/4;
                     std::cout << "Player damage taken: " << incoming - ((((stats.defence + suit.defence)/2)/100) * (incoming * 0.75f)) << "\n";
+                    
                     return incoming - ((((stats.defence + suit.defence)/2)/100) * (incoming * 0.75f));
                 default:
                     return -1;

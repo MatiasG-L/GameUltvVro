@@ -19,6 +19,7 @@
 #include <string>
 #include <cmath>
 #include <queue>
+#include <cstdlib>
 
 #include "raylib.h"
 #include "Player.h"
@@ -173,9 +174,10 @@ int main(void)
     
       //if the player attacks then this code runs
       if(attackANM){
-          //creates a timer for the player so that he has can run through his events ovetime not instantly
+          //creates a timer for the player so that he has can run through his events overtime not instantly
           if(timerATK >= 2){  
               flick = 1;
+              std::system("cls");
               timerATK = 0;
               attackANM = false;
               //depending on the attack type the enemy is damaged using a different type
@@ -196,6 +198,7 @@ int main(void)
               }
               //sets up for the enemies turn
               turn = false;
+              
               enemyWaitTimer = 0.1;
               
           }else{
@@ -245,7 +248,7 @@ int main(void)
               int temp = (int)GetRandomValue(0,1);
               player.health -= player.damageCalc(temp, enemy.returnDamage(temp));
               flickP = 1;
-              player.block = false;
+              player.block = false;       
           }else if(enemyAttackTimer > 0.1){
               enemyAttackTimer += GetFrameTime();
           }
@@ -680,6 +683,8 @@ int main(void)
                 
         //ends the drawing phase of the program     
         EndDrawing();
+        
+        
         //----------------------------------------------------------------------------------
     } 
      

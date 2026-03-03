@@ -55,12 +55,14 @@ class Enemy{
     }
     float physicalDamageOut(){
         float temp = stats.physicalAtk + ((stats.physicalAtk * (level/100)) * 2) * (stamina / maxStamina) * (float)GetRandomValue(0.6,1.4);
+        std::cout << "\n";
         std::cout << "Enemy Raw Damage Out: " << temp << "\n";
         return temp;
     }
     
     float energyDamageOut(){
         float temp = stats.specialAtk + ((stats.specialAtk * (level/100)) * 2) * (energy / maxEnergy) * (float)GetRandomValue(0.6,1.4);
+        std::cout << "\n";
         std::cout << "Enemy Raw Damage Out: " << temp << "\n";
         return temp;
     }
@@ -68,10 +70,12 @@ class Enemy{
     float damageCalc(int type, float incoming){
         float randomNum = GetRandomValue(0,100); 
        std::cout << "\n";
-        if(randomNum <= 8){
+        if(randomNum <= 50){
             std::cout << "PLAYER CRIT! @ " << randomNum << "\n";
-            std::cout << "Damage taken enemy: " <<  incoming *1.7 << "\n";
-            return incoming *1.7;
+            std::cout << "\n";
+            std::cout << "Damage taken enemy: " <<  incoming *2.67 << "\n";
+            std::cout << "\n";
+            return incoming *2.67;
         }else{
             switch(type){
                 case 0:
