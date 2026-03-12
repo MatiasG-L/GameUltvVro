@@ -70,7 +70,7 @@ class Enemy{
     float damageCalc(int type, float incoming){
         float randomNum = GetRandomValue(0,100); 
        std::cout << "\n";
-        if(randomNum <= 50){
+        if(randomNum <= 8){
             std::cout << "PLAYER CRIT! @ " << randomNum << "\n";
             std::cout << "\n";
             std::cout << "Damage taken enemy: " <<  incoming *2.67 << "\n";

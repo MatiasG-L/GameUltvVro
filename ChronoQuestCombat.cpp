@@ -24,6 +24,9 @@
 #include "raylib.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Item.h"
+#include "Slot.h"
+#include "Items.cpp"
 
 #define PLAYERSCALE 15
 
