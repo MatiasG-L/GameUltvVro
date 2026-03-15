@@ -26,7 +26,7 @@
 #include "Enemy.h"
 #include "Item.h"
 #include "Slot.h"
-#include "Items.cpp"
+//#include "Items.cpp"
 
 #define PLAYERSCALE 15
 
@@ -61,7 +61,6 @@ int main(void)
     Texture2D PlayerIdleC = LoadTexture("Assests/Player/PlayerIdleCombat.png");
     Texture2D PlayerAttackP = LoadTexture("Assests/Player/PlayerAttackPhysical.png");
     Texture2D PlayerAttackS = LoadTexture("Assests/Player/PlayerAttackSpecial.png");
-    
     Texture2D Background = LoadTexture("Assests/UI/BackgroundBattle.png");
     Texture2D BarFrame = LoadTexture("Assests/UI/BarFrame.png");
     Texture2D IconA = LoadTexture("Assests/UI/Attack Icon.png");
@@ -668,6 +667,11 @@ int main(void)
                             }
                         
                             break;
+                    //submenu items
+                    case 3:
+                        //DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color color);  
+                        DrawRectangleRounded({screenWidth/2, screenHeight/2, 600, 250}, BLACK);
+                        break;
                     
                     default:
                         break;

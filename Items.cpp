@@ -1,5 +1,5 @@
 #include "Item.h"
-
+#include "raylib.h"
 /*
 Item paramater list:
 1.   (name,  texture,  type, factor)

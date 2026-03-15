@@ -1,10 +1,13 @@
 #include "raylib.h" 
+#include "Item.h"
 #include <iostream>
 class Player{
     public:
     Texture2D textureBack;
     Texture2D textureWorld;
     float width = 50;
+    Item* inventory[30];
+    Item* Equipt[4];
     float height = 100;
     Vector2 position;
     std::string name;
