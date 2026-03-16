@@ -8,4 +8,3 @@ Item paramater list:
 
 Item healthPotion("Health Potion(small)", LoadTexture("Assests/Items/Sprites/Small Health Potion.png"), 1, 10);
 
-void useItem(Item* item){};

@@ -26,7 +26,7 @@
 #include "Enemy.h"
 #include "Item.h"
 #include "Slot.h"
-//#include "Items.cpp"
+
 
 #define PLAYERSCALE 15
 
@@ -56,7 +56,7 @@ int main(void)
     InitWindow(screenWidth, screenHeight, " |ChronoQuest: Fractures In Time| "); //initilisation of the window 
 
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
-    
+    #include "Items.cpp"
     //loading textures from the files
     Texture2D PlayerIdleC = LoadTexture("Assests/Player/PlayerIdleCombat.png");
     Texture2D PlayerAttackP = LoadTexture("Assests/Player/PlayerAttackPhysical.png");
@@ -158,6 +158,8 @@ int main(void)
     
     std::cout << "\n" <<player.currentAnimation.width << ", " << player.currentAnimation.height;
    
+   int counter = 1;
+   
     Vector2 BarPos = {0, 0};
     Vector2 pos = {1300, 650};
     Vector2 PlayerTarget = {200, 400};
@@ -167,6 +169,8 @@ int main(void)
     SetTargetFPS(60);
     //--------------------------------------------------------------------------------------
     
+    player.Equipt[0] = &healthPotion;
+    player.Equipt[1] = &healthPotion;
     
     while (!WindowShouldClose()){    // Detect window close button or ESC key
     //used for ui clicking to ensure one click isnt counted more than once a frame
@@ -670,7 +674,13 @@ int main(void)
                     //submenu items
                     case 3:
                         //DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color color);  
-                        DrawRectangleRounded({screenWidth/2, screenHeight/2, 600, 250}, BLACK);
+                        counter = 1;
+                        for(int i = 0; i < 4; i++){
+                            if(player.Equipt[i] != NULL){
+                                counter++;
+                            }
+                        }
+                        DrawRectangleRounded({ui.pos.x - (100 * counter), ui.pos.y - 200, 200 * counter, 400}, 20, 20, CLEARBASE(BLACK, 200));
                         break;
                     
                     default:
