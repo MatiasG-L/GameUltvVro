@@ -217,7 +217,8 @@ int main(void){
                             DrawText(std::to_string(walls.at(i).index).c_str(), walls[i].position.x, walls[i].position.y, 20 , BLACK );
                         }else if (walls.at(i).positionNPC != NULL){
                             DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, RED);
-                            //DrawText(std::to_string(walls.at(i).index).c_str(), walls.at(i).positionNPC->x, walls.at(i).positionNPC->y, 20 , BLACK );
+                            //DrawTextEx(GetFontDefault(), std::to_string(walls.at(i).index).c_str(), {0,0}, 2, 20, BLACK );
+                            //DrawText("Busss", 10, 10, 2, BLACK);
                         }
                         
                     } 
@@ -227,7 +228,9 @@ int main(void){
                         }else if (!walls.at(i).moveable && walls.at(i).positionNPC == NULL){
                             DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, BLUE);
                         }else if (walls.at(i).positionNPC != NULL){
+                            
                             DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, RED);
+                            //DrawText("Busss", 10, 10, 2, BLACK);
                         }
                         
                     }
@@ -286,6 +289,8 @@ int main(void){
                                 }else if (builder.at(indexc).type == 3){
                                     Npc enemy( 100, 100, vectorAddition(mousePositionWorld, {-50,-50}), "bussy", 'N');
                                     npcs.push_back(enemy);
+                                    Wall temp(enemy.height, enemy.width, &enemy.position, false, RED);
+                                    enemy.collider = &temp;
                                     enemy.collider->index = walls.size();
                                     walls.push_back(*enemy.collider);
                                     enemy.wallp = &enemy.collider->index;
@@ -297,6 +302,14 @@ int main(void){
                     }
                     for (int i = 0; i < walls.size(); i++){
                         if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x, walls.at(i).position.y, walls.at(i).width, walls.at(i).height}) && IsMouseButtonPressed(1)){
+                            
+                            for (int j = 0 ; j < npcs.size(); i++){
+                                
+                                if (walls.at(i).index == *npcs.at(j).wallp){
+                                    npcs.erase(npcs.begin() + j);
+                                }
+                                
+                            }
                             walls.erase(walls.begin() + i);
                             updWalls();
                         }
@@ -557,7 +570,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                     pushFile << ", ";
                     pushFile << npcs.at(i).position.y;
                     pushFile << ", ";
-                    pushFile << *npcs.at(i).wallp;
+                    pushFile << npcs.at(i).collider->index;
                     pushFile << "; \n";
             }
         std::string add = pushFile.str();
@@ -659,6 +672,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                     npcTemp.push_back(enemy1);
                     enemy1.wallp = &walls.at(dataList[2]).index;
                     walls.at(*enemy1.wallp).positionNPC = &enemy1.position;
+           
                   
                 }
                 

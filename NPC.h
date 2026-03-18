@@ -21,7 +21,7 @@ class Npc{
         this->name = name;
         this->state = state;
         
-        collider = new Wall(height, width, &position, false, RED);
+        collider = NULL;
     }
 };
 
