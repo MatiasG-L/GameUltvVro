@@ -21,6 +21,7 @@
 #include <queue>
 #include <fstream>
 #include <sstream>
+#include <cstdlib>
 
 #include "Wall.h"
 #include "raylib.h"
@@ -99,7 +100,7 @@ int main(void){
     loadlevel("Map.txt");
     
     while (!WindowShouldClose()){   
-
+        
         for (int i = 0; i < walls.size(); i++){
             if (walls.at(i).positionNPC != NULL){
                 walls.at(i).position = *walls.at(i).positionNPC;
@@ -184,12 +185,15 @@ int main(void){
         }else{
             camera.zoom += GetMouseWheelMove()* 0.05;
         }
-      if (IsKeyPressed(KEY_SPACE)){
-          savelevel(walls, player);
-      }
-        
-        
-        
+        if (IsKeyPressed(KEY_SPACE)){
+              savelevel(walls, player);
+        }
+        if (IsKeyPressed(KEY_F)){
+            std::system("cls");
+            for (int i = 0 ; i < walls.size(); i++){
+                std::cout << "\n" << npcs.size() << "\n" << std::to_string(walls.at(i).index).c_str() << "\n" ;
+            }
+        }
      
         // Draw, where the scene actually gets rendered and drawn out
         BeginDrawing();
@@ -228,9 +232,7 @@ int main(void){
                         }else if (!walls.at(i).moveable && walls.at(i).positionNPC == NULL){
                             DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, BLUE);
                         }else if (walls.at(i).positionNPC != NULL){
-                            
                             DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, RED);
-                            //DrawText("Busss", 10, 10, 2, BLACK);
                         }
                         
                     }
@@ -671,6 +673,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                     Npc enemy1(100, 100, {dataList[0], dataList[1]}, "EnemyFella", 'n');
                     npcTemp.push_back(enemy1);
                     enemy1.wallp = &walls.at(dataList[2]).index;
+                    enemy1.collider = &walls.at(*enemy1.wallp);
                     walls.at(*enemy1.wallp).positionNPC = &enemy1.position;
            
                   
