@@ -129,7 +129,7 @@ int main(void){
         
        
         
-        if (IsKeyPressed(KEY_R)){
+        if (IsKeyPressed(KEY_E)){
             editor = !editor;
         }
        
@@ -348,7 +348,7 @@ int main(void){
                         }
 
                     }
-                    if (IsKeyPressed(KEY_EQUAL)){
+                    if (IsKeyPressed(KEY_R)){
                         placeMenu = !placeMenu;
                         
                     }

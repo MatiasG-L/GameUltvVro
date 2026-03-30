@@ -23,6 +23,7 @@
 #include "raylib.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Enemies.cpp"
 
 #define PLAYERSCALE 15
 

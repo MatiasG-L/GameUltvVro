@@ -34,5 +34,8 @@ class Wall{
         this->positionNPC = positionNPC;
     }
     
+};
+
+class EnemyWall : Wall{
     
 };
