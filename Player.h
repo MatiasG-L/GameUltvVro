@@ -49,6 +49,11 @@ class Player{
     
     Suit suit;
     
+    typedef struct Direction{
+        char direction;
+        bool moving;
+    }Direction;
+    
     typedef struct Animation{
         int frameSpeed;
         int frameCount;

@@ -128,34 +128,35 @@ int main(void){
         if(!editor){
              if (IsKeyDown(KEY_W)){
                 coll<Wall>(-10, 'y', &walls);
+                coll<Wall>(-10, 'y', &walls);
               }
             else if (IsKeyDown(KEY_A)){
                 coll<Wall>(-10, 'x', &walls);
-                
+                coll<Wall>(-10, 'x', &walls);
               }
             else if (IsKeyDown(KEY_S)){
                 coll<Wall>(10, 'y', &walls);
-                
+                coll<Wall>(10, 'y', &walls);
               }
             else if (IsKeyDown(KEY_D)){
                 coll<Wall>(10, 'x', &walls);
-                
+                coll<Wall>(10, 'x', &walls);
               }
             else if (IsKeyDown(KEY_UP)){
                 coll<Wall>(-10, 'y', &walls);
-                
+                coll<Wall>(-10, 'y', &walls);
               }
             else if (IsKeyDown(KEY_LEFT)){
                 coll<Wall>(-10, 'x', &walls);
-                
+                coll<Wall>(-10, 'x', &walls);
               }
             else if (IsKeyDown(KEY_DOWN)){
                 coll<Wall>(10, 'y', &walls);
-                
+                coll<Wall>(10, 'y', &walls);
               }
             else if (IsKeyDown(KEY_RIGHT)){
                 coll<Wall>(10, 'x', &walls);
-                
+                 coll<Wall>(10, 'x', &walls);
             }else{
 
                 coll<Wall>(0, 'x', &walls);
