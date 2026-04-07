@@ -16,4 +16,17 @@ Enemy Paramaters:
     
 */
 
-Enemy Basic(150, 300, {0, 0}, "Basic Enemy", 100, 5, 100, 100,{5,5,5,5,5});
+Enemy Basic(150, 300, 100, 100, {0, 0}, "Basic Enemy", 100, 5, 100, 100,{5,5,5,5,5});
+
+Enemy enemyBlueprints[] = {Basic};
+
+Enemy getEnemy(int indx){
+    try{
+        enemyBlueprints[indx].ListNumber = indx;
+    return enemyBlueprints[indx];
+    }catch(...){
+        std::cout << "invalid index! default to basic enemy";
+        return Basic;
+    }
+    
+}

@@ -11,8 +11,6 @@ class Npc{
     std::string line;
     bool moveable;
     char state;
-    Wall *collider;
-    int *wallp;
     
     Npc(float width, float height, Vector2 position, std::string name, char state){
         this->width = width;
@@ -21,11 +19,5 @@ class Npc{
         this->name = name;
         this->state = state;
         
-        collider = NULL;
     }
-};
-
-class NpcEnemy : Npc{
-    Enemy *enemy = new Enemy(150, 300, {1100, 100}, "Enemy", 100, 5, 100, 100,{5,5,100,0.1,5});
-
 };

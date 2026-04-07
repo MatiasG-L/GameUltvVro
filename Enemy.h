@@ -5,8 +5,10 @@ class Enemy{
     public:
     Texture2D spriteFront;
     Texture2D spriteWorld;
-    int width;
-    int height;
+    float width;
+    float height;
+    float widthO;
+    float heightO;
     Vector2 position;
     std::string name;
     float health;
@@ -17,6 +19,7 @@ class Enemy{
     float maxEnergy;
     int guard;
     int level;
+    int ListNumber;
     typedef struct{
         float physicalAtk;
         float specialAtk;
@@ -27,9 +30,11 @@ class Enemy{
     
     Stats stats;
     
-    Enemy(int width, int height, Vector2 position, std::string name, float maxHealth, int level, float maxStamina, float maxEnergy, Stats stats){
+    Enemy(float width, float height, float widthO, float heightO, Vector2 position, std::string name, float maxHealth, int level, float maxStamina, float maxEnergy, Stats stats){
         this->width = width;
         this->height = height;
+        this->widthO = widthO;
+        this->heightO = heightO;
         this->position = position;
         this->name = name;
         this->maxHealth = maxHealth;
@@ -77,8 +82,5 @@ class Enemy{
                     return -1;
             }
         }
-    }
-    
-    
-    
+    } 
 };
