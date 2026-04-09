@@ -1,11 +1,14 @@
 #include "raylib.h"
+#pragma once
 class Textures{
     public:
     Texture2D texture;
     std::string name;
-    Vector2D position;
-    Vector2D Size;
-    bool isAnimated;
+    Vector2 position;
+    float angle = 0;
+    Vector2 size;
+    float scale = 1;
+    bool isAnimated = false;
     int frameCounter = 0; 
     int frameSpeed = 4; //(fps)
     int frameCount = 3;
@@ -22,24 +25,34 @@ class Textures{
         bool loop;
         Texture2D spriteSheet;
     }Animation;
+    Animation properties;
     
-    
+    Textures(std::string name, Texture2D texture){
+            this->name = name;
+            this->texture = texture;
+    }
+    Textures(std::string name, Texture2D texture, Animation properties){
+            this->name = name;
+            this->texture = texture;
+            isAnimated = true;
+            this->properties = properties;
+    }
     
     
     void animation(){
         frameCounter++;
 
-        if (frameCounter >= (60/currentAnimation.frameSpeed))
+        if (frameCounter >= (60/properties.frameSpeed))
         {
             frameCounter = 0;
             currentFrame++;
 
-            if (currentFrame > currentAnimation.frameCount-1){
+            if (currentFrame > properties.frameCount-1){
                 currentFrame = 0;
-                if(!currentAnimation.loop) changeAnimation("Idle");
+                
             }
 
-            animRec.x = (float)currentFrame*(float)currentAnimation.width/currentAnimation.frameCount;
+            animRec.x = (float)currentFrame*(float)properties.width/properties.frameCount;
             animRec.y = 0;
         }
 

@@ -30,6 +30,7 @@
 #include "Enemy.h"
 #include "Enemies.cpp"
 #include "Textures.h"
+
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
@@ -37,6 +38,8 @@ Player player(100, 100, {200, 400}, "Player", 3, 50, {100,100,10,10,10,10,10}, {
 std::vector<Wall> walls;
 std::vector<Npc> npcs; 
 std::vector<Enemy> enemies;
+std::vector<Textures> worldTextures;
+Textures *tempHold;
 Vector2 playerSpawn;
 template <typename T> void coll(float distance, char axis, std::vector<T> *toCheck);
 void savelevel (std::vector<Wall> Objcts, Player);
@@ -45,6 +48,8 @@ void loadlevel (std::string map);
 Vector2 mousePositionWorld;
 
 bool placeMenu = false;
+bool TextureSelect = false;
+bool clickFrame = false;
 
 bool editor = false;
 bool place = false;
@@ -57,17 +62,23 @@ int main(void){
         int type;
         Texture2D* extd;
         std::string wallname;
+        int referenceNum;
     }Placer;
     
     std::vector<Placer> builder;
+    std::vector<Placer> textureSelectUI;
     
-    Placer moveableWall{{0,150}, {150,150}, 1, NULL, "push"};
-    Placer nonMoveableWall{{0,150}, {150,150}, 2, NULL, "nonpush"};
-    Placer NPCenemy{{0,150}, {150, 150}, 3, NULL, "enemy"};
+    Placer moveableWall{{0,150}, {150,150}, 1, NULL, "push", -1};
+    Placer nonMoveableWall{{0,150}, {150,150}, 2, NULL, "nonpush", -1};
+    Placer NPCenemy{{0,150}, {150, 150}, 3, NULL, "enemy", -1};
+    Placer texturizer{{0,150}, {150, 150}, 4, NULL, "Texture", -1};
+    
+    
     
     builder.push_back(moveableWall);
     builder.push_back(nonMoveableWall);
     builder.push_back(NPCenemy);
+    builder.push_back(texturizer);
  
     bool dragging = false;
     bool resizing = false;
@@ -84,7 +95,14 @@ int main(void){
     
     
     InitWindow(screenWidth, screenHeight, " |ChronoQuest: Fractures In Time| "); //initilisation of the window 
-
+    #include "Textures.cpp"
+    
+    for(int i = 0; i < TextureList.size(); i++){
+        Placer temp{{0,150}, {150,150}, 0, &TextureList.at(i).texture, TextureList.at(i).name, i};
+        textureSelectUI.push_back(temp);
+    }
+    float scrollOffset = 150;
+    
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
     
         
@@ -192,7 +210,9 @@ int main(void){
                 DrawRectangle(player.position.x,player.position.y,player.width,player.height,ORANGE);
                 
                 
-                
+                for(int i = 0; i < worldTextures.size(); i++){
+                    DrawTextureEx(worldTextures.at(i).texture, worldTextures.at(i).position, worldTextures.at(i).angle, worldTextures.at(i).size.x / worldTextures.at(i).texture.width, WHITE);
+                }
                 
                 for(int i = 0; i < walls.size(); i++){
                     if(editor){
@@ -271,6 +291,13 @@ int main(void){
                                     place = false;
                                     placeMenu = false;
                                     updWalls();
+                                }else if (builder.at(indexc).type == 4){
+                                    tempHold->position = vectorAddition(mousePositionWorld, {-50,-50});
+                                    tempHold->size = {100, 100};
+                                    worldTextures.push_back(*tempHold);
+                                    place = false;
+                                    placeMenu = false;
+                                    
                                 }
                         }
                     }
@@ -291,7 +318,7 @@ int main(void){
                 EndMode2D();
                 //UI elements past this point
 
-                if (editor){
+                if (editor && !TextureSelect){
                     if (placeMenu && !place){
                         DrawRectangle(100, 100 , 1400, 750, GRAY);
                         for(int i = 0; i < builder.size(); i++){
@@ -306,7 +333,10 @@ int main(void){
                                 builder.at(i).size.y = 150;
                             }
                             if (IsMouseButtonPressed(0) && CheckCollisionPointRec({GetMouseX(), GetMouseY()}, {builder.at(i).position.x, builder.at(i).position.y, builder.at(i).size.x, builder.at(i).size.y})){
-                                place = true;
+                                clickFrame = true;
+                                if(i == 3){
+                                    TextureSelect = true;
+                                }
                                 indexc = i;
                             }
                         }
@@ -317,7 +347,58 @@ int main(void){
                         
                     }
                 }
+                
+                if (TextureSelect){
+                        
+                        if(IsKeyPressed(KEY_DOWN) && textureSelectUI.at(0).position.y < 150){
+                            scrollOffset += 50;
+                        } if(IsKeyPressed(KEY_UP) && textureSelectUI.back().position.y > 150){
+                            scrollOffset -= 50;
+                        }
+                        
+                        DrawRectangle(100, 100 , 1450, 750, BLACK);
+                        int row = 1;
+                        float xPos = 150;
+                        float yPos = scrollOffset;
+                        for(int i = 0; i < textureSelectUI.size(); i++){
+                            textureSelectUI.at(i).position.x = xPos;
+                            textureSelectUI.at(i).position.y = yPos;
+                            xPos += textureSelectUI.at(i).size.x + 50;
+                            if(textureSelectUI.at(i).position.x > 1200){
+                                xPos = 150;
+                                yPos += textureSelectUI.at(i).size.y + 50;
+                            }
+                            DrawRectangleLines(textureSelectUI.at(i).position.x, textureSelectUI.at(i).position.y, textureSelectUI.at(i).size.x, textureSelectUI.at(i).size.y, WHITE);
+                            DrawText(textureSelectUI.at(i).wallname.c_str(), textureSelectUI.at(i).position.x, textureSelectUI.at(i).position.y, 20 , RED );
+                            DrawTextureEx(*(textureSelectUI.at(i).extd), {textureSelectUI.at(i).position.x, textureSelectUI.at(i).position.y}, 0,  textureSelectUI.at(i).size.x / textureSelectUI.at(i).extd->width, WHITE);
+                            if (CheckCollisionPointRec({GetMouseX(), GetMouseY()}, {textureSelectUI.at(i).position.x, textureSelectUI.at(i).position.y, textureSelectUI.at(i).size.x, textureSelectUI.at(i).size.y})){
+                                textureSelectUI.at(i).size.x = 160;
+                                textureSelectUI.at(i).size.y = 160;
+                            }else{
+                                textureSelectUI.at(i).size.x = 150;
+                                textureSelectUI.at(i).size.y = 150;
+                            }
+                            if (IsMouseButtonPressed(0) && CheckCollisionPointRec({GetMouseX(), GetMouseY()}, {textureSelectUI.at(i).position.x, textureSelectUI.at(i).position.y, textureSelectUI.at(i).size.x, textureSelectUI.at(i).size.y}) && !clickFrame){
+                                tempHold = &TextureList.at(textureSelectUI.at(i).referenceNum);
+                                place = true;
+                                TextureSelect = false;
+                            }
+                        }
 
+                    
+                    if (IsKeyPressed(KEY_R)){
+                        placeMenu = !placeMenu;
+                        
+                    }
+                    
+                    DrawRectangle(100, 0 , 1450, 150, BLACK);
+                    DrawRectangle(100, 850 , 1450, 150, BLACK);
+                    DrawText("Texture Select:", 650, 50, 45 , WHITE );
+                }
+
+
+
+                clickFrame = false;
                 DrawFPS(0,0);
            
         //ends the drawing phase of the program     
