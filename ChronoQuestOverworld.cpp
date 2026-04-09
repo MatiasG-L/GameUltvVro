@@ -82,6 +82,7 @@ int main(void){
  
     bool dragging = false;
     bool resizing = false;
+    bool textureEdit = false;
     int index = -1;
     int indexc = -1;
 
@@ -242,6 +243,20 @@ int main(void){
                 }
                 
                 if (editor){
+                    for (int i = 0; i < worldTextures.size(); i++){
+                        DrawRectangleRec({worldTextures.at(i).position.x + worldTextures.at(i).size.x, worldTextures.at(i).position.y + worldTextures.at(i).size.y, (20 / camera.zoom), (20 / camera.zoom)}, BLUE);
+                        if (CheckCollisionPointRec(mousePositionWorld, {worldTextures.at(i).position.x + worldTextures.at(i).size.x, worldTextures.at(i).position.y + worldTextures.at(i).size.y,(20 / camera.zoom), (20 / camera.zoom)}) && IsMouseButtonPressed(0)){
+                            resizing = true;
+                            textureEdit = true;
+                            index = i;                            
+                        }
+                        if (CheckCollisionPointRec(mousePositionWorld, {worldTextures.at(i).position.x, worldTextures.at(i).position.y, worldTextures.at(i).size.x, worldTextures.at(i).size.y}) && IsMouseButtonPressed(0)){
+                            dragging = true;
+                            textureEdit = true;
+                            index = i;                            
+                        }
+                    }
+                    
                     for (int i = 0; i < walls.size(); i++){
                         DrawRectangleRec({walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height, (20 / camera.zoom), (20 / camera.zoom)}, BLUE);
                         if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height,(20 / camera.zoom), (20 / camera.zoom)}) && IsMouseButtonPressed(0)){
@@ -254,19 +269,27 @@ int main(void){
                         }
                     }
                         
-                    if (resizing){
+                    if (resizing && !textureEdit){
                         walls[index].width += GetMouseDelta().x / camera.zoom;
                         walls[index].height += GetMouseDelta().y / camera.zoom;
+                    }else if(resizing && textureEdit){
+                        worldTextures[index].size.x += GetMouseDelta().x / camera.zoom;
+                        worldTextures[index].size.y += GetMouseDelta().y / camera.zoom;
                     }
                     
-                    if (dragging){  
+                    if (dragging && !textureEdit){  
                             walls[index].position.x += GetMouseDelta().x / camera.zoom;
                             walls[index].position.y += GetMouseDelta().y / camera.zoom;
+                    }else if(dragging && textureEdit){
+                            worldTextures[index].position.x += GetMouseDelta().x / camera.zoom;
+                            worldTextures[index].position.y += GetMouseDelta().y / camera.zoom;
                     }
+                        
                     
                     if(IsMouseButtonReleased(0)){
                         resizing = false;
                         dragging = false;
+                        textureEdit = false;
                         index = -1;
                     }
 
@@ -307,6 +330,12 @@ int main(void){
                             updWalls();
                         }
                     }
+                    for (int i = 0; i < worldTextures.size(); i++){
+                        if (CheckCollisionPointRec(mousePositionWorld, {worldTextures.at(i).position.x, worldTextures.at(i).position.y, worldTextures.at(i).size.x, worldTextures.at(i).size.y}) && IsMouseButtonPressed(1)){
+                            worldTextures.erase(worldTextures.begin() + i);
+
+                        }
+                    }
 
                 }
                 if (!place){
@@ -337,6 +366,7 @@ int main(void){
                                 if(i == 3){
                                     TextureSelect = true;
                                 }
+                                place = true;
                                 indexc = i;
                             }
                         }
@@ -349,7 +379,9 @@ int main(void){
                 }
                 
                 if (TextureSelect){
-                        
+                        if(IsKeyPressed(KEY_R)){
+                            TextureSelect = false;
+                        }
                         if(IsKeyPressed(KEY_DOWN) && textureSelectUI.at(0).position.y < 150){
                             scrollOffset += 50;
                         } if(IsKeyPressed(KEY_UP) && textureSelectUI.back().position.y > 150){
