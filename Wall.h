@@ -2,6 +2,8 @@
 #include "Enemy.h"
 class Wall{
     public:
+    Texture2D texture;
+    bool hasTexture = false;
     float height;
     float width;
     Vector2 position;

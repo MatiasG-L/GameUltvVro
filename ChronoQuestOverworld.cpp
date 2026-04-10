@@ -52,6 +52,8 @@ bool TextureSelect = false;
 bool clickFrame = false;
 
 bool editor = false;
+bool texMode = false;
+bool addTex = false;
 bool place = false;
 int main(void){
     
@@ -84,6 +86,7 @@ int main(void){
     bool resizing = false;
     bool textureEdit = false;
     int index = -1;
+    int addTexIndx = -1;
     int indexc = -1;
 
     // Initialization
@@ -190,12 +193,11 @@ int main(void){
         if (IsKeyPressed(KEY_SPACE)){
               savelevel(walls, player);
         }
-        if (IsKeyPressed(KEY_F)){
-            std::system("cls");
-            for (int i = 0 ; i < walls.size(); i++){
-                std::cout << "\n" << npcs.size() << "\n" << std::to_string(walls.at(i).index).c_str() << "\n" ;
-            }
+        if(IsKeyPressed(KEY_T)){
+            texMode = !texMode;
         }
+
+
      
         // Draw, where the scene actually gets rendered and drawn out
         BeginDrawing();
@@ -210,64 +212,117 @@ int main(void){
                 //draws the player
                 DrawRectangle(player.position.x,player.position.y,player.width,player.height,ORANGE);
                 
-                
-                for(int i = 0; i < worldTextures.size(); i++){
-                    DrawTextureEx(worldTextures.at(i).texture, worldTextures.at(i).position, worldTextures.at(i).angle, worldTextures.at(i).size.x / worldTextures.at(i).texture.width, WHITE);
+                if(editor && texMode){
+                    for(int i = 0; i < worldTextures.size(); i++){
+                        DrawTextureEx(worldTextures.at(i).texture, worldTextures.at(i).position, worldTextures.at(i).angle, worldTextures.at(i).size.x / worldTextures.at(i).texture.width, WHITE);
+                        DrawRectangleLines(worldTextures.at(i).position.x, worldTextures.at(i).position.y, worldTextures.at(i).size.x, worldTextures.at(i).size.y, BLACK);
+                    }
+                }else if(!editor){
+                    for(int i = 0; i < worldTextures.size(); i++){
+                        DrawTextureEx(worldTextures.at(i).texture, worldTextures.at(i).position, worldTextures.at(i).angle, worldTextures.at(i).size.x / worldTextures.at(i).texture.width, WHITE);
+                    }
                 }
+                else{
+                    for(int i = 0; i < worldTextures.size(); i++){
+                        DrawTextureEx(worldTextures.at(i).texture, worldTextures.at(i).position, worldTextures.at(i).angle, worldTextures.at(i).size.x / worldTextures.at(i).texture.width, CLEARBASE(WHITE, 100));
+                    }
+                }
+               
                 
                 for(int i = 0; i < walls.size(); i++){
-                    if(editor){
-                        if(walls.at(i).moveable && walls.at(i).isEnemy == false){
+                    if(editor && !texMode){
+                        
+                        if(walls[i].hasTexture){
+                            walls[i].texture.width = walls[i].width;
+                            walls[i].texture.height = walls[i].height;
+                            DrawTextureEx(walls[i].texture, walls[i].position, 0, walls[i].width / walls[i].texture.width, WHITE);
+                            DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, BLACK);
+                        }else{
+                          if(walls.at(i).moveable && walls.at(i).isEnemy == false){
+                            
                             DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, GREEN);
                             DrawText(std::to_string(walls.at(i).index).c_str(), walls[i].position.x, walls[i].position.y, 20 , BLACK );
-                        }else if (!walls.at(i).moveable && walls.at(i).isEnemy == false){
+                           }else if (!walls.at(i).moveable && walls.at(i).isEnemy == false){
                             DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, BLUE);
                             DrawText(std::to_string(walls.at(i).index).c_str(), walls[i].position.x, walls[i].position.y, 20 , BLACK );
-                        }else if (walls.at(i).isEnemy == true){
+                           }else if (walls.at(i).isEnemy == true){
                             DrawRectangleLines(walls[i].position.x, walls[i].position.y, walls[i].width, walls[i].height, RED);
                             DrawText(std::to_string(walls.at(i).index).c_str(), walls[i].position.x, walls[i].position.y, 20 , BLACK );
                             
+                          }  
                         }
                         
+                        
+                    }else if(editor && texMode){
+                        if(walls[i].hasTexture){
+                            walls[i].texture.width = walls[i].width;
+                            walls[i].texture.height = walls[i].height;
+                            DrawTextureEx(walls[i].texture, walls[i].position, 0, walls[i].width / walls[i].texture.width, SEMICLEAR);
+                            DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, SEMICLEAR);
+                        }else{
+                            if(walls.at(i).moveable && walls.at(i).isEnemy == false){
+                                DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, CLEARBASE(GREEN,100));
+                                DrawText("NULL", walls[i].position.x, walls[i].position.y, 20 , BLACK );
+                            }else if (!walls.at(i).moveable && walls.at(i).isEnemy == false){
+                                DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, CLEARBASE(BLUE,100));
+                                DrawText("NULL", walls[i].position.x, walls[i].position.y, 20 , BLACK );
+                            }else if (walls.at(i).isEnemy == true){
+                                DrawRectangleLines(walls[i].position.x, walls[i].position.y, walls[i].width, walls[i].height, CLEARBASE(RED,100));
+                                DrawText("NULL", walls[i].position.x, walls[i].position.y, 20 , BLACK );
+                                
+                            }
+                        }
                     } 
                     else{
-                        if(walls.at(i).moveable && walls.at(i).isEnemy == false){
-                            DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, GREEN);
-                        }else if (!walls.at(i).moveable && walls.at(i).isEnemy == false){
-                            DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, BLUE);
-                        }else if (walls.at(i).isEnemy == true){
-                            DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, RED);
+                        if(walls[i].hasTexture){
+                            walls[i].texture.width = walls[i].width;
+                            walls[i].texture.height = walls[i].height;
+
+                            DrawTextureEx(walls[i].texture, walls[i].position, 0, 1, WHITE);
+                        }else{
+                            if(walls.at(i).moveable && walls.at(i).isEnemy == false){
+                                DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, GREEN);
+                            }else if (!walls.at(i).moveable && walls.at(i).isEnemy == false){
+                                DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, BLUE);
+                            }else if (walls.at(i).isEnemy == true){
+                                DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, RED);
+                            }
                         }
                         
                     }
                 }
                 
                 if (editor){
-                    for (int i = 0; i < worldTextures.size(); i++){
-                        DrawRectangleRec({worldTextures.at(i).position.x + worldTextures.at(i).size.x, worldTextures.at(i).position.y + worldTextures.at(i).size.y, (20 / camera.zoom), (20 / camera.zoom)}, BLUE);
-                        if (CheckCollisionPointRec(mousePositionWorld, {worldTextures.at(i).position.x + worldTextures.at(i).size.x, worldTextures.at(i).position.y + worldTextures.at(i).size.y,(20 / camera.zoom), (20 / camera.zoom)}) && IsMouseButtonPressed(0)){
-                            resizing = true;
-                            textureEdit = true;
-                            index = i;                            
+                    if(texMode){
+                        for (int i = 0; i < worldTextures.size(); i++){
+                            DrawRectangleRec({worldTextures.at(i).position.x + worldTextures.at(i).size.x, worldTextures.at(i).position.y + worldTextures.at(i).size.y, (20 / camera.zoom), (20 / camera.zoom)}, BLUE);
+                            if (CheckCollisionPointRec(mousePositionWorld, {worldTextures.at(i).position.x + worldTextures.at(i).size.x, worldTextures.at(i).position.y + worldTextures.at(i).size.y,(20 / camera.zoom), (20 / camera.zoom)}) && IsMouseButtonPressed(0)){
+                                resizing = true;
+                                textureEdit = true;
+                                index = i;                            
+                            }
+                            if (CheckCollisionPointRec(mousePositionWorld, {worldTextures.at(i).position.x, worldTextures.at(i).position.y, worldTextures.at(i).size.x, worldTextures.at(i).size.y}) && IsMouseButtonPressed(0)){
+                                dragging = true;
+                                textureEdit = true;
+                                index = i;                            
+                            }
                         }
-                        if (CheckCollisionPointRec(mousePositionWorld, {worldTextures.at(i).position.x, worldTextures.at(i).position.y, worldTextures.at(i).size.x, worldTextures.at(i).size.y}) && IsMouseButtonPressed(0)){
-                            dragging = true;
-                            textureEdit = true;
-                            index = i;                            
+                    }else{
+                        for (int i = 0; i < walls.size(); i++){
+                            DrawRectangleRec({walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height, (20 / camera.zoom), (20 / camera.zoom)}, BLUE);
+                            if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height,(20 / camera.zoom), (20 / camera.zoom)}) && IsMouseButtonPressed(0)){
+                                resizing = true;
+                                index = i;                            
+                            }
+                            if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x, walls.at(i).position.y, walls.at(i).width, walls.at(i).height}) && IsMouseButtonPressed(0)){
+                                dragging = true;
+                                index = i;                            
+                            }
                         }
                     }
                     
-                    for (int i = 0; i < walls.size(); i++){
-                        DrawRectangleRec({walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height, (20 / camera.zoom), (20 / camera.zoom)}, BLUE);
-                        if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x + walls.at(i).width, walls.at(i).position.y + walls.at(i).height,(20 / camera.zoom), (20 / camera.zoom)}) && IsMouseButtonPressed(0)){
-                            resizing = true;
-                            index = i;                            
-                        }
-                        if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x, walls.at(i).position.y, walls.at(i).width, walls.at(i).height}) && IsMouseButtonPressed(0)){
-                            dragging = true;
-                            index = i;                            
-                        }
-                    }
+                    
+                    
                         
                     if (resizing && !textureEdit){
                         walls[index].width += GetMouseDelta().x / camera.zoom;
@@ -277,10 +332,20 @@ int main(void){
                         worldTextures[index].size.y += GetMouseDelta().y / camera.zoom;
                     }
                     
-                    if (dragging && !textureEdit){  
+                    if (dragging && !textureEdit){ 
+                        if(IsKeyPressed(KEY_Q)){
+                            addTexIndx = index;
+                            TextureSelect = true;
+                            addTex = true;
+                        }
                             walls[index].position.x += GetMouseDelta().x / camera.zoom;
                             walls[index].position.y += GetMouseDelta().y / camera.zoom;
                     }else if(dragging && textureEdit){
+                        if(IsKeyPressed(KEY_A)){
+                            worldTextures[index].angle += 15;
+                        }else if(IsKeyPressed(KEY_D)){
+                            worldTextures[index].angle -= 15;
+                        }
                             worldTextures[index].position.x += GetMouseDelta().x / camera.zoom;
                             worldTextures[index].position.y += GetMouseDelta().y / camera.zoom;
                     }
@@ -291,6 +356,8 @@ int main(void){
                         dragging = false;
                         textureEdit = false;
                         index = -1;
+                        
+                        
                     }
 
                      if (place){
@@ -365,8 +432,10 @@ int main(void){
                                 clickFrame = true;
                                 if(i == 3){
                                     TextureSelect = true;
+                                }else{
+                                    place = true; 
                                 }
-                                place = true;
+                                
                                 indexc = i;
                             }
                         }
@@ -379,6 +448,7 @@ int main(void){
                 }
                 
                 if (TextureSelect){
+                        
                         if(IsKeyPressed(KEY_R)){
                             TextureSelect = false;
                         }
@@ -411,10 +481,18 @@ int main(void){
                                 textureSelectUI.at(i).size.y = 150;
                             }
                             if (IsMouseButtonPressed(0) && CheckCollisionPointRec({GetMouseX(), GetMouseY()}, {textureSelectUI.at(i).position.x, textureSelectUI.at(i).position.y, textureSelectUI.at(i).size.x, textureSelectUI.at(i).size.y}) && !clickFrame){
-                                tempHold = &TextureList.at(textureSelectUI.at(i).referenceNum);
-                                place = true;
-                                TextureSelect = false;
+                                if(!addTex){
+                                    tempHold = &TextureList.at(textureSelectUI.at(i).referenceNum);
+                                    place = true;
+                                    TextureSelect = false;
+                                }else{
+                                    walls[addTexIndx].texture = TextureList.at(textureSelectUI.at(i).referenceNum).texture;
+                                    walls[addTexIndx].hasTexture = true;
+                                    addTex = false;
+                                    TextureSelect = false;
+                                }
                             }
+                            
                         }
 
                     
