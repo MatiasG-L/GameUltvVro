@@ -160,6 +160,8 @@ int main(void)
    
    int counter = 1;
    
+   float posXItem = 0;
+   
     Vector2 BarPos = {0, 0};
     Vector2 pos = {1300, 650};
     Vector2 PlayerTarget = {200, 400};
@@ -171,7 +173,7 @@ int main(void)
     
     player.Equipt[0] = &healthPotion;
     player.Equipt[1] = &healthPotion;
-    player.Equipt[2] = &healthPotion;
+   // player.Equipt[2] = &healthPotion;
     player.Equipt[3] = &healthPotion;
     
     while (!WindowShouldClose()){    // Detect window close button or ESC key
@@ -677,7 +679,7 @@ int main(void)
                     case 3:
                         //DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color color);  
                         counter = 0;
-                        float posXtemp  = ui.pos.x + 200;
+                        posXItem  = ui.pos.x + 100;
                         for(int i = 0; i < 4; i++){
                             if(player.Equipt[i] != NULL){
                                 counter++;
@@ -690,7 +692,14 @@ int main(void)
                         DrawRectangleRoundedLines({ui.pos.x + 300 - (400 * counter), ui.pos.y - 200, 400 * (counter), 400}, 20, 20, 3, GREEN);
                         
                         for(int i = 0; i < counter; i++){
-                            DrawCircleLines(posXtemp, ui.pos.y - 150, 200, BLACK);
+                            if(CheckCollisionPointCircle({GetMouseX(), GetMouseY()}, {posXItem, ui.pos.y}, 150)){
+                                DrawCircle(posXItem, ui.pos.y, 175, GREEN);
+                                DrawCircle(posXItem, ui.pos.y, 170, DARKGREEN);
+                            }else{
+                                DrawCircleLines(posXItem, ui.pos.y, 150, BLACK);
+                            }
+                           // DrawCircleLines(posXItem, ui.pos.y, 150, BLACK);
+                            posXItem -= 400;
                         }
                         
                         break;
