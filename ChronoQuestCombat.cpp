@@ -171,6 +171,8 @@ int main(void)
     
     player.Equipt[0] = &healthPotion;
     player.Equipt[1] = &healthPotion;
+    player.Equipt[2] = &healthPotion;
+    player.Equipt[3] = &healthPotion;
     
     while (!WindowShouldClose()){    // Detect window close button or ESC key
     //used for ui clicking to ensure one click isnt counted more than once a frame
@@ -674,13 +676,23 @@ int main(void)
                     //submenu items
                     case 3:
                         //DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color color);  
-                        counter = 1;
+                        counter = 0;
+                        float posXtemp  = ui.pos.x + 200;
                         for(int i = 0; i < 4; i++){
                             if(player.Equipt[i] != NULL){
                                 counter++;
                             }
                         }
-                        DrawRectangleRounded({ui.pos.x - (100 * counter), ui.pos.y - 200, 200 * counter, 400}, 20, 20, CLEARBASE(BLACK, 200));
+                        if(counter == 0){
+                            ui.UIWheel = 0;
+                            break;
+                        }
+                        DrawRectangleRoundedLines({ui.pos.x + 300 - (400 * counter), ui.pos.y - 200, 400 * (counter), 400}, 20, 20, 3, GREEN);
+                        
+                        for(int i = 0; i < counter; i++){
+                            DrawCircleLines(posXtemp, ui.pos.y - 150, 200, BLACK);
+                        }
+                        
                         break;
                     
                     default:

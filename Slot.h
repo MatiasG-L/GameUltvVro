@@ -3,6 +3,7 @@
 class Slot{
     public:
         Texture2D texture;
+        int amount = 1;
         float width;
         float height;
         Vector2 position;

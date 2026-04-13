@@ -2,9 +2,11 @@
 #include "raylib.h"
 /*
 Item paramater list:
-1.   (name,  texture,  type, factor)
-2.   (name,  texture,  type, factor, scalable)
+1.   (name,  texture,  type, factor, id)
+2.   (name,  texture,  type, factor, id, scalable)
 */
 
-Item healthPotion("Health Potion(small)", LoadTexture("Assests/Items/Sprites/Small Health Potion.png"), 1, 10);
+Item healthPotion("Health Potion(small)", LoadTexture("Assests/Items/Sprites/Small Health Potion.png"), 1, 10, 0);
+
+Item items[] = {healthPotion};
 

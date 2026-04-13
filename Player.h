@@ -7,7 +7,7 @@ class Player{
     Texture2D textureWorld;
     float width = 50;
     Item* inventory[30];
-    Item* Equipt[4];
+    Item* Equipt[4] = {NULL, NULL, NULL, NULL};
     float height = 100;
     Vector2 position;
     std::string name;
