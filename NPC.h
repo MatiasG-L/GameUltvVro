@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "Enemy.h"
+#pragma once
 
 class Npc{
     public:
@@ -11,6 +11,7 @@ class Npc{
     std::string line;
     bool moveable;
     char state;
+    int ListNumber;
     
     Npc(float width, float height, Vector2 position, std::string name, char state){
         this->width = width;
