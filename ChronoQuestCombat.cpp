@@ -106,6 +106,9 @@ int main(void)
     float enemyWaitTimer = 0;
     float enemyAttackTimer = 0;
     
+    float radiusSelect = 175;
+    bool grow = true;
+    
     // creation of a structer of varibles used for the ui unifed under the name "ui"
     typedef struct{
         //vectors for the positons of the 4 buttons on the menu
@@ -689,14 +692,26 @@ int main(void)
                             ui.UIWheel = 0;
                             break;
                         }
-                        DrawRectangleRoundedLines({ui.pos.x + 300 - (400 * counter), ui.pos.y - 200, 400 * (counter), 400}, 20, 20, 3, GREEN);
+                        DrawRectangleRounded({ui.pos.x + 300 - (400 * counter), ui.pos.y - 200, 400 * (counter), 400}, 20, 20, CLEARBASE(BLACK, 200));
                         
                         for(int i = 0; i < counter; i++){
                             if(CheckCollisionPointCircle({GetMouseX(), GetMouseY()}, {posXItem, ui.pos.y}, 150)){
+                                if(radiusSelect < 200 && grow){
+                                    radiusSelect += 40 * GetFrameTime();
+                                }else{
+                                    grow = false;
+                                } 
+                                    
+                                if(!grow && radiusSelect > 175){
+                                    radiusSelect -= 40 * GetFrameTime();
+                                }else{
+                                    grow = true;
+                                }
                                 DrawCircle(posXItem, ui.pos.y, 175, GREEN);
                                 DrawCircle(posXItem, ui.pos.y, 170, DARKGREEN);
+                                DrawCircleLines(posXItem, ui.pos.y, radiusSelect, BLACK);
                             }else{
-                                DrawCircleLines(posXItem, ui.pos.y, 150, BLACK);
+                                DrawCircle(posXItem, ui.pos.y, 150, CLEARBASE(BLACK, 150));
                             }
                            // DrawCircleLines(posXItem, ui.pos.y, 150, BLACK);
                             posXItem -= 400;
