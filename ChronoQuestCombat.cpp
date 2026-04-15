@@ -162,7 +162,7 @@ int main(void)
     std::cout << "\n" <<player.currentAnimation.width << ", " << player.currentAnimation.height;
    
    int counter = 1;
-   
+   std::vector<int> indxs; 
    float posXItem = 0;
    
     Vector2 BarPos = {0, 0};
@@ -682,10 +682,12 @@ int main(void)
                     case 3:
                         //DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color color);  
                         counter = 0;
+                        
                         posXItem  = ui.pos.x + 100;
                         for(int i = 0; i < 4; i++){
                             if(player.Equipt[i] != NULL){
                                 counter++;
+                                indxs.push_back(i);
                             }
                         }
                         if(counter == 0){
@@ -716,7 +718,7 @@ int main(void)
                            // DrawCircleLines(posXItem, ui.pos.y, 150, BLACK);
                             posXItem -= 400;
                         }
-                        
+                        indxs = {};
                         break;
                     
                     default:
