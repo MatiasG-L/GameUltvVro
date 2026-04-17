@@ -10,3 +10,8 @@ Item healthPotion("Health Potion(small)", LoadTexture("Assests/Items/Sprites/Sma
 
 Item items[] = {healthPotion};
 
+void TextureSet(){
+    for(int  i = 0; i < items.size(); i++){
+        
+    }
+}

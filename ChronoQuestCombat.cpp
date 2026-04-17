@@ -176,7 +176,7 @@ int main(void)
     
     player.Equipt[0] = &healthPotion;
     player.Equipt[1] = &healthPotion;
-   // player.Equipt[2] = &healthPotion;
+    player.Equipt[2] = &healthPotion;
     player.Equipt[3] = &healthPotion;
     
     while (!WindowShouldClose()){    // Detect window close button or ESC key
@@ -712,6 +712,8 @@ int main(void)
                                 DrawCircle(posXItem, ui.pos.y, 175, GREEN);
                                 DrawCircle(posXItem, ui.pos.y, 170, DARKGREEN);
                                 DrawCircleLines(posXItem, ui.pos.y, radiusSelect, BLACK);
+                                DrawTexture(player.Equipt[indxs.size()-1]->texture, posXItem,  ui.pos.y, WHITE);
+                                indxs.pop_back();
                             }else{
                                 DrawCircle(posXItem, ui.pos.y, 150, CLEARBASE(BLACK, 150));
                             }
