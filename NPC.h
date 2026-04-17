@@ -1,7 +1,7 @@
 #include "raylib.h"
 #pragma once
 
-class Npc{
+class NPC{
     public:
     float width;
     float height;
@@ -13,7 +13,7 @@ class Npc{
     char state;
     int ListNumber;
     
-    Npc(float width, float height, Vector2 position, std::string name, char state){
+    NPC(float width, float height, Vector2 position, std::string name, char state){
         this->width = width;
         this->height = height;
         this->position = position;

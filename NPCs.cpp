@@ -2,17 +2,17 @@
 #include "NPC.h"
 
 
-NPC Basic(100, 100, {0, 0}, "DudeMan", 'S');
+NPC BasicFella(100, 100, {0, 0}, "DudeMan", 'S');
 
-NPC npcBlueprints[] = {Basic};
+NPC NPCBlueprints[] = {BasicFella};
 
-NPC getNpc(int indx){
+NPC getNPC(int indx){
     try{
-        npcBlueprints[indx].ListNumber = indx;
-    return npcBlueprints[indx];
+        NPCBlueprints[indx].ListNumber = indx;
+    return NPCBlueprints[indx];
     }catch(...){
         std::cout << "invalid index! default to basic NPC";
-        return Basic;
+        return BasicFella;
     }
     
 }

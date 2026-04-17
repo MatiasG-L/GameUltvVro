@@ -30,14 +30,15 @@
 #include "Enemy.h"
 #include "Enemies.cpp"
 #include "Textures.h"
+#include "NPCs.cpp"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
 Player player(100, 100, {200, 400}, "Player", 3, 50, {100,100,10,10,10,10,10}, {10,10,10,10,100,100});
 std::vector<Wall> walls;
-std::vector<Npc> npcs; 
-std::vector<Enemy> enemies;
+ 
+
 std::vector<Textures> worldTextures;
 Textures *tempHold;
 Vector2 playerSpawn;
@@ -74,13 +75,14 @@ int main(void){
     Placer nonMoveableWall{{0,150}, {150,150}, 2, NULL, "nonpush", -1};
     Placer NPCenemy{{0,150}, {150, 150}, 3, NULL, "enemy", -1};
     Placer texturizer{{0,150}, {150, 150}, 4, NULL, "Texture", -1};
-    
+    Placer NPCbasic{{0,150}, {150, 150}, 5, NULL, "NPC", -1};
     
     
     builder.push_back(moveableWall);
     builder.push_back(nonMoveableWall);
     builder.push_back(NPCenemy);
     builder.push_back(texturizer);
+    builder.push_back(NPCbasic);
  
     bool dragging = false;
     bool resizing = false;
@@ -238,18 +240,20 @@ int main(void){
                             DrawTextureEx(walls[i].texture, walls[i].position, 0, walls[i].width / walls[i].texture.width, WHITE);
                             DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, BLACK);
                         }else{
-                          if(walls.at(i).moveable && walls.at(i).isEnemy == false){
+                          if(walls.at(i).moveable && walls.at(i).isEnemy == false && walls.at(i).isNPC == false){
                             
                             DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, GREEN);
                             DrawText(std::to_string(walls.at(i).index).c_str(), walls[i].position.x, walls[i].position.y, 20 , BLACK );
-                           }else if (!walls.at(i).moveable && walls.at(i).isEnemy == false){
+                           }else if (!walls.at(i).moveable && walls.at(i).isEnemy == false && walls.at(i).isNPC == false){
                             DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, BLUE);
                             DrawText(std::to_string(walls.at(i).index).c_str(), walls[i].position.x, walls[i].position.y, 20 , BLACK );
                            }else if (walls.at(i).isEnemy == true){
                             DrawRectangleLines(walls[i].position.x, walls[i].position.y, walls[i].width, walls[i].height, RED);
                             DrawText(std::to_string(walls.at(i).index).c_str(), walls[i].position.x, walls[i].position.y, 20 , BLACK );
-                            
-                          }  
+                           }else if (walls.at(i).isNPC == true){
+                            DrawRectangleLines(walls[i].position.x, walls[i].position.y, walls[i].width, walls[i].height, YELLOW);
+                            DrawText(std::to_string(walls.at(i).index).c_str(), walls[i].position.x, walls[i].position.y, 20 , BLACK );
+                           }  
                         }
                         
                         
@@ -260,16 +264,18 @@ int main(void){
                             DrawTextureEx(walls[i].texture, walls[i].position, 0, walls[i].width / walls[i].texture.width, SEMICLEAR);
                             DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, SEMICLEAR);
                         }else{
-                            if(walls.at(i).moveable && walls.at(i).isEnemy == false){
+                            if(walls.at(i).moveable && walls.at(i).isEnemy == false && walls.at(i).isNPC == false){
                                 DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, CLEARBASE(GREEN,100));
                                 DrawText("NULL", walls[i].position.x, walls[i].position.y, 20 , BLACK );
-                            }else if (!walls.at(i).moveable && walls.at(i).isEnemy == false){
+                            }else if (!walls.at(i).moveable && walls.at(i).isEnemy == false && walls.at(i).isNPC == false){
                                 DrawRectangleLines(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, CLEARBASE(BLUE,100));
                                 DrawText("NULL", walls[i].position.x, walls[i].position.y, 20 , BLACK );
                             }else if (walls.at(i).isEnemy == true){
                                 DrawRectangleLines(walls[i].position.x, walls[i].position.y, walls[i].width, walls[i].height, CLEARBASE(RED,100));
-                                DrawText("NULL", walls[i].position.x, walls[i].position.y, 20 , BLACK );
-                                
+                                DrawText("NULL", walls[i].position.x, walls[i].position.y, 20 , BLACK );  
+                            }else if (walls.at(i).isNPC == true){
+                                DrawRectangleLines(walls[i].position.x, walls[i].position.y, walls[i].width, walls[i].height, CLEARBASE(YELLOW,100));
+                                DrawText("NULL", walls[i].position.x, walls[i].position.y, 20 , BLACK );  
                             }
                         }
                     } 
@@ -280,12 +286,14 @@ int main(void){
 
                             DrawTextureEx(walls[i].texture, walls[i].position, 0, 1, WHITE);
                         }else{
-                            if(walls.at(i).moveable && walls.at(i).isEnemy == false){
+                            if(walls.at(i).moveable && walls.at(i).isEnemy == false && walls.at(i).isNPC == false){
                                 DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, GREEN);
-                            }else if (!walls.at(i).moveable && walls.at(i).isEnemy == false){
+                            }else if (!walls.at(i).moveable && walls.at(i).isEnemy == false && walls.at(i).isNPC == false){
                                 DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, BLUE);
                             }else if (walls.at(i).isEnemy == true){
                                 DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, RED);
+                            }else if (walls.at(i).isNPC == true){
+                                DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, YELLOW);
                             }
                         }
                         
@@ -387,14 +395,21 @@ int main(void){
                                     worldTextures.push_back(*tempHold);
                                     place = false;
                                     placeMenu = false;
-                                    
+                                }else if (builder.at(indexc).type == 5){
+                                    Wall NPCb(100, 100, mousePositionWorld, YELLOW, new NPC(getNPC(0)));
+                                    walls.push_back(NPCb);
+                                    place = false;
+                                    placeMenu = false;
+                                    updWalls();
                                 }
                         }
                     }
                     for (int i = 0; i < walls.size(); i++){
-                        if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x, walls.at(i).position.y, walls.at(i).width, walls.at(i).height}) && IsMouseButtonPressed(1)){
+                        if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x, walls.at(i).position.y, walls.at(i).width, walls.at(i).height}) && IsMouseButtonPressed(1) && !IsKeyDown(KEY_LEFT_SHIFT)){
                             walls.erase(walls.begin() + i);
                             updWalls();
+                        }else if (CheckCollisionPointRec(mousePositionWorld, {walls.at(i).position.x, walls.at(i).position.y, walls.at(i).width, walls.at(i).height}) && IsMouseButtonPressed(1) && IsKeyDown(KEY_LEFT_SHIFT) && walls.at(i).hasTexture){
+                            walls.at(i).hasTexture = false;
                         }
                     }
                     for (int i = 0; i < worldTextures.size(); i++){
@@ -714,7 +729,11 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
             pushFile << ", ";
             if(obj.isEnemy)pushFile << obj.enemy->ListNumber;
             else pushFile << 0;
-            
+            pushFile << ", ";
+            pushFile << obj.isNPC;
+            pushFile << ", ";
+            if(obj.isNPC)pushFile << obj.npc->ListNumber;
+            else pushFile << 0;
             pushFile << "; \n";
         }
             pushFile << "PLAYER\n";
@@ -750,7 +769,7 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
         bool objs = false;
         std::vector<Wall> obj;
         int arrayPos = 0;
-        int dataList[7];
+        int dataList[8];
         while(!objs){
 
             try{
@@ -762,18 +781,20 @@ template<typename T> void coll(float distance, char axis, std::vector<T> *toChec
                 }
                 
                 dataList[arrayPos] = std::stof(mapContents.substr(0,counter));
-                if(arrayPos < 6)arrayPos++;
+                if(arrayPos < 8)arrayPos++;
                 else{
                     arrayPos = 0;
-                    if(dataList[5] == 0){
+                    if(dataList[5] == 0 && dataList[7] == 0){
                         Wall obj1(dataList[3],  dataList[2], {dataList[0], dataList[1]}, dataList[4], BLACK);
                         obj.push_back(obj1);
-                    }else{
+                    }else if(dataList[5] == 1 && dataList[7] == 0){
                         Wall obj1(dataList[3],  dataList[2], {dataList[0], dataList[1]}, dataList[4], BLACK, new Enemy(getEnemy(dataList[6])));
+                        obj.push_back(obj1);
+                    }else if(dataList[5] == 0 && dataList[7] == 1){
+                        Wall obj1(dataList[3],  dataList[2], {dataList[0], dataList[1]}, BLACK, new NPC(getNPC(dataList[7])));
                         obj.push_back(obj1);
                     }
                     
-                  
                 }
                 
                 mapContents = mapContents.substr(counter + 2);

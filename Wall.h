@@ -13,7 +13,7 @@ class Wall{
     int index;
     bool isEnemy = false;
     Enemy *enemy = NULL;
-    bool isNpc = false;
+    bool isNPC = false;
     NPC *npc = NULL;
     Wall(float height, float width, Vector2 position, Color sqrColor){
         this->height = height;
@@ -44,5 +44,6 @@ class Wall{
         this->sqrColor = sqrColor;
         this->position = position;
         this->npc = npc;
+        isNPC = true;
     }
 };
