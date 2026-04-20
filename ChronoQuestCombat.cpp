@@ -57,6 +57,17 @@ int main(void)
 
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
     #include "Items.cpp"
+    float sizeUp = 300;
+    for(int i = 0; i < sizeof(items) / sizeof(items[0]); i++){
+        if(items[i].texture.width > items[i].texture.height){
+            items[i].texture.width *=  (sizeUp / items[i].texture.width);
+            items[i].texture.height *= (sizeUp / items[i].texture.width);
+        }else{
+            items[i].texture.width *= (sizeUp / items[i].texture.height);
+            items[i].texture.height *= (sizeUp / items[i].texture.height);
+        }
+    }
+
     //loading textures from the files
     Texture2D PlayerIdleC = LoadTexture("Assests/Player/PlayerIdleCombat.png");
     Texture2D PlayerAttackP = LoadTexture("Assests/Player/PlayerAttackPhysical.png");
@@ -162,7 +173,7 @@ int main(void)
     std::cout << "\n" <<player.currentAnimation.width << ", " << player.currentAnimation.height;
    
    int counter = 1;
-   std::vector<int> indxs; 
+   std::vector<Item> indxs; 
    float posXItem = 0;
    
     Vector2 BarPos = {0, 0};
@@ -174,10 +185,10 @@ int main(void)
     SetTargetFPS(60);
     //--------------------------------------------------------------------------------------
     
-    player.Equipt[0] = &healthPotion;
-    player.Equipt[1] = &healthPotion;
-    player.Equipt[2] = &healthPotion;
-    player.Equipt[3] = &healthPotion;
+    player.Equipt[0] = &items[0];
+    player.Equipt[1] = &items[0];
+    player.Equipt[2] = &items[0];
+    player.Equipt[3] = &items[1];
     
     while (!WindowShouldClose()){    // Detect window close button or ESC key
     //used for ui clicking to ensure one click isnt counted more than once a frame
@@ -687,7 +698,7 @@ int main(void)
                         for(int i = 0; i < 4; i++){
                             if(player.Equipt[i] != NULL){
                                 counter++;
-                                indxs.push_back(i);
+                                indxs.push_back(*player.Equipt[i]);
                             }
                         }
                         if(counter == 0){
@@ -712,10 +723,11 @@ int main(void)
                                 DrawCircle(posXItem, ui.pos.y, 175, GREEN);
                                 DrawCircle(posXItem, ui.pos.y, 170, DARKGREEN);
                                 DrawCircleLines(posXItem, ui.pos.y, radiusSelect, BLACK);
-                                DrawTexture(player.Equipt[indxs.size()-1]->texture, posXItem,  ui.pos.y, WHITE);
-                                indxs.pop_back();
+                                DrawTexture(player.Equipt[i]->texture, posXItem - sizeUp/2,  ui.pos.y - sizeUp/2, WHITE);
+
                             }else{
                                 DrawCircle(posXItem, ui.pos.y, 150, CLEARBASE(BLACK, 150));
+                                DrawTexture(player.Equipt[i]->texture, posXItem - sizeUp/2,  ui.pos.y - sizeUp/2, CLEARBASE(WHITE, 150));
                             }
                            // DrawCircleLines(posXItem, ui.pos.y, 150, BLACK);
                             posXItem -= 400;

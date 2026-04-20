@@ -7,11 +7,6 @@ Item paramater list:
 */
 
 Item healthPotion("Health Potion(small)", LoadTexture("Assests/Items/Sprites/Small Health Potion.png"), 1, 10, 0);
+Item run("Health Potion(small)", LoadTexture("Assests/UI/Running Icon.png"), 1, 10, 0);
 
-Item items[] = {healthPotion};
-
-void TextureSet(){
-    for(int  i = 0; i < items.size(); i++){
-        
-    }
-}
+Item items[] = {healthPotion, run};
