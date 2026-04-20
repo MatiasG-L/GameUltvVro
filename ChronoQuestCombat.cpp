@@ -188,7 +188,7 @@ int main(void)
     player.Equipt[0] = &items[0];
     player.Equipt[1] = &items[0];
     player.Equipt[2] = &items[0];
-    player.Equipt[3] = &items[1];
+    player.Equipt[3] = &items[0];
     
     while (!WindowShouldClose()){    // Detect window close button or ESC key
     //used for ui clicking to ensure one click isnt counted more than once a frame
@@ -724,6 +724,8 @@ int main(void)
                                 DrawCircle(posXItem, ui.pos.y, 170, DARKGREEN);
                                 DrawCircleLines(posXItem, ui.pos.y, radiusSelect, BLACK);
                                 DrawTexture(player.Equipt[i]->texture, posXItem - sizeUp/2,  ui.pos.y - sizeUp/2, WHITE);
+                                DrawRectangleRounded({50, 50, 1450, 100}, 20, 20, CLEARBASE(BLACK, 210));
+                                
 
                             }else{
                                 DrawCircle(posXItem, ui.pos.y, 150, CLEARBASE(BLACK, 150));
