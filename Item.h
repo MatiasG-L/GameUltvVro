@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include <string>
 #pragma once
 class Item{
     public:
@@ -15,7 +16,7 @@ class Item{
             this->type = type;
             this->factor = factor;
             this->id = id;
-            this->description = description;
+            this->description = TextBreakup(15 ,description);
         }
         Item(std::string name, Texture2D texture, int type, int factor, int id, std::string description, bool scalable){
             this->name = name;
@@ -24,6 +25,29 @@ class Item{
             this->factor = factor;
             this->id = id;
             this->scalable = scalable;
-            this->description = description;
+            this->description = TextBreakup(15 ,description);
+        }
+        
+        std::string TextBreakup(int dist, std::string breaker){
+            
+            std::string result = "";
+            int counter = 0;
+            REDO:
+            for(int i = 0; i < breaker.length(); i++){
+                counter++;
+                if(counter == dist){
+                    
+                    while(breaker[counter] != ' '){
+                        counter++;
+                    }
+                    result += breaker.substr(0, counter);
+                    result += "\n";
+                    breaker = breaker.substr(counter);
+                    counter = 0;
+                    goto REDO;
+                }
+            }
+            
+            return result;
         }
 };

@@ -724,7 +724,9 @@ int main(void)
                                 DrawCircle(posXItem, ui.pos.y, 170, DARKGREEN);
                                 DrawCircleLines(posXItem, ui.pos.y, radiusSelect, BLACK);
                                 DrawTexture(player.Equipt[i]->texture, posXItem - sizeUp/2,  ui.pos.y - sizeUp/2, WHITE);
-                                DrawRectangleRounded({50, 50, 1450, 100}, 20, 20, CLEARBASE(BLACK, 210));
+                                DrawRectangle(50, 25, 1500, 400, CLEARBASE(BLACK, 210));
+                                DrawTexture(player.Equipt[i]->texture, 100, 50, WHITE);
+                                DrawText(player.Equipt[i]->description.c_str(), 600, 50, 20, WHITE);
                                 
 
                             }else{
