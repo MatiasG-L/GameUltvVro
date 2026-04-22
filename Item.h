@@ -16,7 +16,7 @@ class Item{
             this->type = type;
             this->factor = factor;
             this->id = id;
-            this->description = TextBreakup(15 ,description);
+            this->description = TextBreakup(25 ,description);
         }
         Item(std::string name, Texture2D texture, int type, int factor, int id, std::string description, bool scalable){
             this->name = name;
@@ -25,19 +25,19 @@ class Item{
             this->factor = factor;
             this->id = id;
             this->scalable = scalable;
-            this->description = TextBreakup(15 ,description);
+            this->description = TextBreakup(25 ,description);
         }
         
         std::string TextBreakup(int dist, std::string breaker){
             
             std::string result = "";
-            int counter = 0;
             REDO:
+            int counter = 0;
             for(int i = 0; i < breaker.length(); i++){
-                counter++;
+                ++counter;
                 if(counter == dist){
                     
-                    while(breaker[counter] != ' '){
+                    while(breaker[counter] != ' ' && breaker[counter] != '.'){
                         counter++;
                     }
                     result += breaker.substr(0, counter);
