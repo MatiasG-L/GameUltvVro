@@ -296,10 +296,10 @@ int main(void)
       //linear interpolate the camera to its target zoom level so its movement is smooth and not sudden
       camera.zoom = lerp(camera.zoom, zoomTarget, 0.03);
       //tween the player and enemy position to their  target to move them overtime and smoothly
-      Vector2 temp = lerpV(player.position, PlayerTarget, 0.1);
+      Vector2 temp = lerpV(player.position, PlayerTarget, 0.15);
       temp.x * GetFrameTime();
       temp.y * GetFrameTime();
-      Vector2 tempE = lerpV(enemy.position, EnemyTarget, 0.1);
+      Vector2 tempE = lerpV(enemy.position, EnemyTarget, 0.2);
       tempE.x * GetFrameTime();
       tempE.y * GetFrameTime();
       player.position = temp;
@@ -500,18 +500,21 @@ int main(void)
                         
                         switch(ui.UIWheel){
                         case 0:
-                            pos1 = pos;
-                            pos2 = pos;
-                            pos3 = pos;
-                            pos4 = pos;
+                            pos1 = vectorAddition(pos, 10, 10);
+                            pos2 = vectorAddition(pos, 10, -10);
+                            pos3 = vectorAddition(pos, -10, -10);
+                            pos4 = vectorAddition(pos, -10, 10);
                             ui.rad1 = 200;
                             ui.rad2 = 200;
                             ui.rad3 = 200;
                             ui.rad4 = 200;
-                            DrawCircleSectorLines(ui.pos01, ui.rad1, 0 + spinA, 90 + spinA, 50, YELLOW);                           
-                            DrawCircleSectorLines(ui.pos02, ui.rad2, 270 + spinA, 360 + spinA, 50, BLUE);                           
-                            DrawCircleSectorLines(ui.pos03, ui.rad3, 180 + spinA, 270 + spinA, 50, RED);                           
-                            DrawCircleSectorLines(ui.pos04, ui.rad4, 90 + spinA, 180 + spinA, 50, GREEN);
+                            DrawCircleSector(ui.pos01, ui.rad1 + 10, 0 + spinA, 90 + spinA, 50, YELLOW);
+                            DrawCircleSector(ui.pos01, ui.rad1, 0 + spinA, 90 + spinA, 50, GOLD);
+                            DrawCircleSector(ui.pos02, ui.rad2 + 10
+, 270 + spinA, 360 + spinA, 50, BLUE);
+                            DrawCircleSector(ui.pos02, ui.rad2, 270 + spinA, 360 + spinA, 50, DARKBLUE);                           
+                            DrawCircleSector(ui.pos03, ui.rad3, 180 + spinA, 270 + spinA, 50, MAROON);                           
+                            DrawCircleSector(ui.pos04, ui.rad4, 90 + spinA, 180 + spinA, 50, DARKGREEN);
                             DrawTextureEx(IconI , vectorAddition(ui.pos04, -200, -80), 0, 5, GREEN);
                             DrawTextureEx(IconR , vectorAddition(ui.pos01, -70, -80), 0, 5, YELLOW);
                             DrawTextureEx(IconB , vectorAddition(ui.pos02, 0, -150), 0, 2.5, BLUE);
@@ -746,13 +749,13 @@ int main(void)
                   
                 
                 
-                ui.posS1 = lerpV(ui.posS1, pos1temp , 0.3);
-                ui.posS2 = lerpV(ui.posS2, pos2temp, 0.3);
+                ui.posS1 = lerpV(ui.posS1, pos1temp , 0.4);
+                ui.posS2 = lerpV(ui.posS2, pos2temp, 0.4);
                 
-                ui.pos01 = lerpV(ui.pos01, pos1 , 0.3);
-                ui.pos02 = lerpV(ui.pos02, pos2, 0.3);
-                ui.pos03 = lerpV(ui.pos03, pos3, 0.3);
-                ui.pos04 = lerpV(ui.pos04, pos4, 0.3);
+                ui.pos01 = lerpV(ui.pos01, pos1 , 0.4);
+                ui.pos02 = lerpV(ui.pos02, pos2, 0.4);
+                ui.pos03 = lerpV(ui.pos03, pos3, 0.4);
+                ui.pos04 = lerpV(ui.pos04, pos4, 0.4);
                 
         //ends the drawing phase of the program     
         EndDrawing();
