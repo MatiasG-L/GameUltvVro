@@ -508,13 +508,15 @@ int main(void)
                             ui.rad2 = 200;
                             ui.rad3 = 200;
                             ui.rad4 = 200;
-                            DrawCircleSector(ui.pos01, ui.rad1 + 10, 0 + spinA, 90 + spinA, 50, YELLOW);
-                            DrawCircleSector(ui.pos01, ui.rad1, 0 + spinA, 90 + spinA, 50, GOLD);
-                            DrawCircleSector(ui.pos02, ui.rad2 + 10
-, 270 + spinA, 360 + spinA, 50, BLUE);
-                            DrawCircleSector(ui.pos02, ui.rad2, 270 + spinA, 360 + spinA, 50, DARKBLUE);                           
-                            DrawCircleSector(ui.pos03, ui.rad3, 180 + spinA, 270 + spinA, 50, MAROON);                           
-                            DrawCircleSector(ui.pos04, ui.rad4, 90 + spinA, 180 + spinA, 50, DARKGREEN);
+                            DrawCircleSector(ui.pos01, ui.rad1 + 10, 0 + spinA, 90 + spinA, 50, CLEARBASE(YELLOW, 100));
+                            DrawCircleSector(ui.pos01, ui.rad1, 0 + spinA, 90 + spinA, 50, CLEARBASE(GOLD, 100));
+                            DrawCircleSector(ui.pos02, ui.rad2 + 10, 270 + spinA, 360 + spinA, 50, CLEARBASE(BLUE, 100));
+                            DrawCircleSector(ui.pos02, ui.rad2, 270 + spinA, 360 + spinA, 50, CLEARBASE(DARKBLUE, 100));                    
+                            DrawCircleSector(ui.pos03, ui.rad3 + 10, 180 + spinA, 270 + spinA, 50, CLEARBASE(RED, 100)); 
+                            DrawCircleSector(ui.pos03, ui.rad3, 180 + spinA, 270 + spinA, 50, CLEARBASE(MAROON, 100)); 
+                            DrawCircleSector(ui.pos04, ui.rad4 + 10, 90 + spinA, 180 + spinA, 50, CLEARBASE(GREEN, 100));
+                            DrawCircleSector(ui.pos04, ui.rad4, 90 + spinA, 180 + spinA, 50, CLEARBASE(DARKGREEN, 100));
+                            
                             DrawTextureEx(IconI , vectorAddition(ui.pos04, -200, -80), 0, 5, GREEN);
                             DrawTextureEx(IconR , vectorAddition(ui.pos01, -70, -80), 0, 5, YELLOW);
                             DrawTextureEx(IconB , vectorAddition(ui.pos02, 0, -150), 0, 2.5, BLUE);
@@ -528,14 +530,14 @@ int main(void)
                             ui.rad4 = 200;
                             ui.rad1 = 200;
                             ui.rad2 = 200;
-                            DrawCircleSectorLines(ui.pos01, ui.rad1, 0, 90, 50, YELLOW);
+                            DrawCircleSector(ui.pos01, ui.rad1, 0, 90, 50, CLEARBASE(GOLD, 100));
                             DrawTextureEx(IconR , vectorAddition(ui.pos01, -70, -80), 0, 5, YELLOW);
-                            DrawCircleSectorLines(ui.pos02, ui.rad2, 270, 360, 50, BLUE);
+                            DrawCircleSector(ui.pos02, ui.rad2, 270, 360, 50, CLEARBASE(DARKBLUE, 100));
                             DrawTextureEx(IconB , vectorAddition(ui.pos02, 0, -150), 0, 2.5, BLUE);
                             DrawCircleSector(ui.pos03, ui.rad3, 180, 270, 50, RED);
                             DrawTextureEx(IconA , vectorAddition(ui.pos03, -200, -180), 0, 3, WHITE);
                             DrawTextureEx(IconA , vectorAddition(ui.pos03, -180, -160), 0, 3, SEMICLEAR);
-                            DrawCircleSectorLines(ui.pos04, ui.rad4, 90, 180, 50, GREEN);
+                            DrawCircleSector(ui.pos04, ui.rad4, 90, 180, 50, CLEARBASE(DARKGREEN, 100));
                             DrawTextureEx(IconI , vectorAddition(ui.pos04, -200, -80), 0, 5, GREEN);
                             break;
                             
