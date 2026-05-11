@@ -67,7 +67,12 @@ class Player{
     Animation idle;
     Animation AttackP;
     Animation AttackS;
-    
+    Animation idleDown;
+    Animation idleUp;
+    Animation idleLeft;
+    Animation idleRight;
+    Animation walkDown;
+    Animation walkUp;
     Animation currentAnimation;
     
     Player(int width, int height, Vector2 position, std::string name, int rank, int expRankUp, Stats stats, Suit suit){
@@ -122,6 +127,24 @@ class Player{
         }else if(name == "Special"){
             currentAnimation = AttackS;
             textureBack = AttackS.spriteSheet;
+        }else if(name == "IdleDown"){
+            currentAnimation = idleDown;
+            textureBack = idleDown.spriteSheet;
+        }else if(name == "IdleUp"){
+            currentAnimation = idleUp;
+            textureBack = idleUp.spriteSheet;
+        }else if(name == "IdleLeft"){
+            currentAnimation = idleLeft;
+            textureBack = idleLeft.spriteSheet;
+        }else if(name == "IdleRight"){
+            currentAnimation = idleRight;
+            textureBack = idleRight.spriteSheet;
+        }else if(name == "WalkDown"){
+            currentAnimation = walkDown;
+            textureBack = walkDown.spriteSheet;
+        }else if(name == "WalkUp"){
+            currentAnimation = walkUp;
+            textureBack = walkUp.spriteSheet;
         }
     }
     

@@ -35,7 +35,7 @@
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
-Player player(100, 100, {200, 400}, "Player", 3, 50, {100,100,10,10,10,10,10}, {10,10,10,10,100,100});
+Player player(110, 225, {200, 400}, "Player", 3, 50, {100,100,10,10,10,10,10}, {10,10,10,10,100,100});
 std::vector<Wall> walls;
  
 
@@ -111,7 +111,40 @@ int main(void){
     
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
     
-        
+    Texture2D PlayerIdleDown = LoadTexture("Assests/Player/Player-Prototype-Idle-Down.png");
+    Texture2D PlayerIdleUp = LoadTexture("Assests/Player/Player-Prototype-Idle-Up.png");
+    Texture2D PlayerIdleLeft = LoadTexture("Assests/Player/Player-Prototype-Idle-Left.png");
+    Texture2D PlayerIdleRight = LoadTexture("Assests/Player/Player-Prototype-Idle-Right.png");
+    
+    Texture2D PlayerWalkDown = LoadTexture("Assests/Player/Player-Prototype-Walk-Down.png");
+    Texture2D PlayerWalkUp = LoadTexture("Assests/Player/Player-Prototype-Walk-Up.png");
+    
+    PlayerIdleDown.width = 225;
+    PlayerIdleDown.height = 250;
+    PlayerIdleUp.width = 225;
+    PlayerIdleUp.height = 250;
+    PlayerIdleLeft.width = 225;
+    PlayerIdleLeft.height = 250;
+    PlayerIdleRight.width = 225;
+    PlayerIdleRight.height = 250;
+    
+    PlayerWalkDown.width = 225;
+    PlayerWalkDown.height = 250;
+    PlayerWalkUp.width = 225;
+    PlayerWalkUp.height = 250;
+    
+    //sets up player anim
+    
+    player.idleDown = {1, 2, PlayerIdleDown.width , PlayerIdleDown.height , "IdleDown", true, PlayerIdleDown};
+    player.idleUp = {1, 2, PlayerIdleUp.width, PlayerIdleUp.height, "IdleUp", true, PlayerIdleUp};
+    player.idleLeft = {1, 2, PlayerIdleLeft.width, PlayerIdleLeft.height, "IdleLeft", true, PlayerIdleLeft};
+    player.idleRight = {1, 2, PlayerIdleRight.width, PlayerIdleRight.height, "IdleRight", true, PlayerIdleRight};
+    
+    player.walkDown = {3, 2, PlayerWalkDown.width, PlayerWalkDown.height, "WalkDown", true, PlayerWalkDown};
+    player.walkUp = {3, 2 , PlayerWalkUp.width, PlayerWalkUp.height, "WalkUp", true, PlayerWalkUp};
+    
+    player.changeAnimation("IdleDown");
+    
     //initializes camera values
     Camera2D camera = { 0 };
     camera.offset = {screenWidth/2.0f, screenHeight/2.0f };
@@ -133,8 +166,7 @@ int main(void){
   
         mousePositionWorld = GetScreenToWorld2D({GetMouseX(), GetMouseY()}, camera);
         
-        
-        
+        player.animation();
         
         if(!editor){
             camera.target = lerpV(camera.target, {player.position.x + player.width / 2, player.position.y + player.height / 2}, 0.2);
@@ -151,41 +183,42 @@ int main(void){
        
         
         if(!editor){
-             if (IsKeyDown(KEY_W)){
+             if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)){
                 coll<Wall>(-10, 'y', &walls);
                 coll<Wall>(-10, 'y', &walls);
+                if (player.currentAnimation.name != "WalkUp"){
+                    player.changeAnimation("WalkUp");
+                }
               }
-            else if (IsKeyDown(KEY_A)){
+            else if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)){
                 coll<Wall>(-10, 'x', &walls);
                 coll<Wall>(-10, 'x', &walls);
+                if (player.currentAnimation.name != "IdleLeft"){
+                    player.changeAnimation("IdleLeft");
+                }
               }
-            else if (IsKeyDown(KEY_S)){
+            else if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)){
                 coll<Wall>(10, 'y', &walls);
                 coll<Wall>(10, 'y', &walls);
+                if (player.currentAnimation.name != "WalkDown"){
+                    player.changeAnimation("WalkDown");
+                }
               }
-            else if (IsKeyDown(KEY_D)){
+            else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)){
                 coll<Wall>(10, 'x', &walls);
                 coll<Wall>(10, 'x', &walls);
-              }
-            else if (IsKeyDown(KEY_UP)){
-                coll<Wall>(-10, 'y', &walls);
-                coll<Wall>(-10, 'y', &walls);
-              }
-            else if (IsKeyDown(KEY_LEFT)){
-                coll<Wall>(-10, 'x', &walls);
-                coll<Wall>(-10, 'x', &walls);
-              }
-            else if (IsKeyDown(KEY_DOWN)){
-                coll<Wall>(10, 'y', &walls);
-                coll<Wall>(10, 'y', &walls);
-              }
-            else if (IsKeyDown(KEY_RIGHT)){
-                coll<Wall>(10, 'x', &walls);
-                 coll<Wall>(10, 'x', &walls);
+                if (player.currentAnimation.name != "IdleRight"){
+                    player.changeAnimation("IdleRight");
+                }
             }else{
 
                 coll<Wall>(0, 'x', &walls);
                 coll<Wall>(0, 'y', &walls);
+                if (player.currentAnimation.name != "IdleDown" && player.currentAnimation.name == "WalkDown"){
+                    player.changeAnimation("IdleDown");
+                }else if (player.currentAnimation.name != "IdleUp" && player.currentAnimation.name == "WalkUp"){
+                    player.changeAnimation("IdleUp");
+                }
             }
             
         camera.zoom = 1.0f;    
@@ -212,7 +245,9 @@ int main(void){
                   
                 ClearBackground(WHITE);
                 //draws the player
-                DrawRectangle(player.position.x,player.position.y,player.width,player.height,ORANGE);
+                DrawRectangleLines(player.position.x ,player.position.y ,110 ,225 ,ORANGE);
+                
+                DrawTextureRec(player.textureBack, {player.animRec.x, 0, player.currentAnimation.width/player.currentAnimation.frameCount, player.currentAnimation.height}, {player.position.x, player.position.y - 10}, WHITE);
                 
                 if(editor && texMode){
                     for(int i = 0; i < worldTextures.size(); i++){
