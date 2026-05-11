@@ -1,5 +1,6 @@
 #include "raylib.h" 
 #include "Item.h"
+#pragma once
 #include <iostream>
 class Player{
     public:

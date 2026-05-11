@@ -10,22 +10,32 @@ class Item{
         bool scalable = false;
         int id;
         std::string description;
-        Item(std::string name, Texture2D texture, int type, int factor, int id, std::string description){
+        
+        void (*action)(int, bool) = NULL;
+        
+        Item(void (*actionF)(int, bool), std::string name, Texture2D texture, int type, int factor, int id, std::string description){
             this->name = name;
             this->texture = texture;
             this->type = type;
             this->factor = factor;
             this->id = id;
             this->description = TextBreakup(25 ,description);
+            this->action = actionF;
         }
-        Item(std::string name, Texture2D texture, int type, int factor, int id, std::string description, bool scalable){
+        
+        Item(void (*actionF)(int, bool), std::string name, Texture2D texture, int type, int factor, int id, std::string description, bool scalable){
             this->name = name;
             this->texture = texture;
             this->type = type;
             this->factor = factor;
             this->id = id;
             this->scalable = scalable;
+            this->action = actionF;
             this->description = TextBreakup(25 ,description);
+        }
+        
+        void useItem(){
+            (*action)(factor, scalable);
         }
         
         std::string TextBreakup(int dist, std::string breaker){

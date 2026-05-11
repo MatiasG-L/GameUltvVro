@@ -38,6 +38,8 @@ Player player(200, 400, {200, 400}, "Player", 3, 50, {10,10,10,10,10,10,10}, {10
 //Enemy(int width, int height, Vector2 position, std::string name, float maxHealth, int level, float maxStamina, float maxEnergy, Stats stats)
 Enemy enemy(150, 300, {1100, 100}, "Enemy01", 100, 5, 100, 100,{8,8,5,5,5});
 
+#include "ItemFunctions.cpp"
+
 
 //physicalDamageOut
 int main(void)
@@ -169,12 +171,12 @@ int main(void)
     player.AttackS = {10, 19, PlayerAttackS.width, PlayerAttackS.height, "AttackSpecial", false, PlayerAttackS};
     //starts the animation of with idle
     player.changeAnimation("Idle");
-    
+     
     std::cout << "\n" <<player.currentAnimation.width << ", " << player.currentAnimation.height;
    
-   int counter = 1;
-   std::vector<Item> indxs; 
-   float posXItem = 0;
+    int counter = 1;
+    std::vector<Item> indxs; 
+    float posXItem = 0;
    
     Vector2 BarPos = {0, 0};
     Vector2 pos = {1300, 650};
@@ -384,11 +386,13 @@ int main(void)
                 }
                 
                 //linear interpolated the value of the health bar for a smoother motion
+                
                 ui.HealthWidthE = lerp(ui.HealthWidthE, lerp(0, 500, enemy.health/enemy.maxHealth), 0.2);
+                DrawRectangle(900, -100, 500, 25, GRAY);
                 //Draws the gray background for the bar when it gets depleted 
                 DrawRectangle(900, -100, 500, 25, GRAY);
                 //Draws the actual health bar with a width of the value 'HealthWidth' as declared previously.
-                DrawRectangle(900, -100, ui.HealthWidthE, 25, BLUE);
+                DrawRectangle(900, -100, ui.HealthWidthE, 25, MAROON);
                 //Draws the outline for the bar to make it look a little better
                 //DrawRectangleRoundedLines({900, -100, 600, 30}, 5, 5, 10, BLACK);
                  
