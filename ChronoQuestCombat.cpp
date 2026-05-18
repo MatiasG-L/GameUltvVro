@@ -52,10 +52,7 @@ int main(void)
     const int screenWidth = 1600;
     const int screenHeight = 900;
     
-    
-    
-    
-    InitWindow(screenWidth, screenHeight, " |ChronoQuest: Fractures In Time| "); //initilisation of the window 
+    InitWindow(screenWidth, screenHeight, " |Super Dragon Ball Super Z Kai Superheros GT| "); //initilisation of the window 
 
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
     #include "Items.cpp"
@@ -69,7 +66,10 @@ int main(void)
             items[i].texture.height *= (sizeUp / items[i].texture.height);
         }
     }
-
+    
+    healthPotion.action = healBasic;
+    
+    
     //loading textures from the files
     Texture2D PlayerIdleC = LoadTexture("Assests/Player/PlayerIdleCombat.png");
     Texture2D PlayerAttackP = LoadTexture("Assests/Player/PlayerAttackPhysical.png");
@@ -718,6 +718,11 @@ int main(void)
                         
                         for(int i = 0; i < counter; i++){
                             if(CheckCollisionPointCircle({GetMouseX(), GetMouseY()}, {posXItem, ui.pos.y}, 150)){
+                                if(IsMouseButtonPressed(0)){
+                                    player.Equipt[i]->useItem();
+                                }
+                                
+                                
                                 if(radiusSelect < 200 && grow){
                                     radiusSelect += 40 * GetFrameTime();
                                 }else{

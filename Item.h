@@ -11,9 +11,9 @@ class Item{
         int id;
         std::string description;
         
-        void (*action)(int, bool) = NULL;
+        int (*action)(int, bool) = NULL;
         
-        Item(void (*actionF)(int, bool), std::string name, Texture2D texture, int type, int factor, int id, std::string description){
+        Item(int (*actionF)(int, bool), std::string name, Texture2D texture, int type, int factor, int id, std::string description){
             this->name = name;
             this->texture = texture;
             this->type = type;
@@ -23,7 +23,7 @@ class Item{
             this->action = actionF;
         }
         
-        Item(void (*actionF)(int, bool), std::string name, Texture2D texture, int type, int factor, int id, std::string description, bool scalable){
+        Item(int (*actionF)(int, bool), std::string name, Texture2D texture, int type, int factor, int id, std::string description, bool scalable){
             this->name = name;
             this->texture = texture;
             this->type = type;
