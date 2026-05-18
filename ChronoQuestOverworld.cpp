@@ -118,6 +118,8 @@ int main(void){
     
     Texture2D PlayerWalkDown = LoadTexture("Assests/Player/Player-Prototype-Walk-Down.png");
     Texture2D PlayerWalkUp = LoadTexture("Assests/Player/Player-Prototype-Walk-Up.png");
+    Texture2D PlayerWalkLeft = LoadTexture("Assests/Player/Player-Prototype-Walk-Left.png");
+    Texture2D PlayerWalkRight = LoadTexture("Assests/Player/Player-Prototype-Walk-Right.png");
     
     PlayerIdleDown.width = 225;
     PlayerIdleDown.height = 250;
@@ -132,6 +134,10 @@ int main(void){
     PlayerWalkDown.height = 250;
     PlayerWalkUp.width = 225;
     PlayerWalkUp.height = 250;
+    PlayerWalkLeft.width = 450;
+    PlayerWalkLeft.height = 250;
+    PlayerWalkRight.width = 450;
+    PlayerWalkRight.height = 250;
     
     //sets up player anim
     
@@ -142,6 +148,8 @@ int main(void){
     
     player.walkDown = {3, 2, PlayerWalkDown.width, PlayerWalkDown.height, "WalkDown", true, PlayerWalkDown};
     player.walkUp = {3, 2 , PlayerWalkUp.width, PlayerWalkUp.height, "WalkUp", true, PlayerWalkUp};
+    player.walkLeft = {5, 4, PlayerWalkLeft.width, PlayerWalkLeft.height, "WalkLeft", true, PlayerWalkLeft};
+    player.walkRight = {5, 4, PlayerWalkRight.width, PlayerWalkRight.height, "WalkRight", true, PlayerWalkRight};
     
     player.changeAnimation("IdleDown");
     
@@ -193,8 +201,8 @@ int main(void){
             else if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)){
                 coll<Wall>(-10, 'x', &walls);
                 coll<Wall>(-10, 'x', &walls);
-                if (player.currentAnimation.name != "IdleLeft"){
-                    player.changeAnimation("IdleLeft");
+                if (player.currentAnimation.name != "WalkLeft"){
+                    player.changeAnimation("WalkLeft");
                 }
               }
             else if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)){
@@ -207,8 +215,8 @@ int main(void){
             else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)){
                 coll<Wall>(10, 'x', &walls);
                 coll<Wall>(10, 'x', &walls);
-                if (player.currentAnimation.name != "IdleRight"){
-                    player.changeAnimation("IdleRight");
+                if (player.currentAnimation.name != "WalkRight"){
+                    player.changeAnimation("WalkRight");
                 }
             }else{
 
@@ -218,6 +226,10 @@ int main(void){
                     player.changeAnimation("IdleDown");
                 }else if (player.currentAnimation.name != "IdleUp" && player.currentAnimation.name == "WalkUp"){
                     player.changeAnimation("IdleUp");
+                }else if (player.currentAnimation.name != "IdleLeft" && player.currentAnimation.name == "WalkLeft"){
+                    player.changeAnimation("IdleLeft");
+                }else if (player.currentAnimation.name != "IdleRight" && player.currentAnimation.name == "WalkRight"){
+                    player.changeAnimation("IdleRight");
                 }
             }
             

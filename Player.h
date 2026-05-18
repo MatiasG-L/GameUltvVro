@@ -73,6 +73,8 @@ class Player{
     Animation idleRight;
     Animation walkDown;
     Animation walkUp;
+    Animation walkLeft;
+    Animation walkRight;
     Animation currentAnimation;
     
     Player(int width, int height, Vector2 position, std::string name, int rank, int expRankUp, Stats stats, Suit suit){
@@ -145,6 +147,12 @@ class Player{
         }else if(name == "WalkUp"){
             currentAnimation = walkUp;
             textureBack = walkUp.spriteSheet;
+        }else if(name == "WalkLeft"){
+            currentAnimation = walkLeft;
+            textureBack = walkLeft.spriteSheet;
+        }else if(name == "WalkRight"){
+            currentAnimation = walkRight;
+            textureBack = walkRight.spriteSheet;
         }
     }
     
