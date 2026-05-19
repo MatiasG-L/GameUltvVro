@@ -255,9 +255,9 @@ int main(void){
                 BeginMode2D(camera);
                 
                   
-                ClearBackground(WHITE);
+                ClearBackground(DARKGREEN);
                 //draws the player
-                DrawRectangleLines(player.position.x ,player.position.y ,110 ,225 ,ORANGE);
+               // DrawRectangleLines(player.position.x ,player.position.y ,110 ,225 ,ORANGE);
                 
                 DrawTextureRec(player.textureBack, {player.animRec.x, 0, player.currentAnimation.width/player.currentAnimation.frameCount, player.currentAnimation.height}, {player.position.x, player.position.y - 10}, WHITE);
                 
@@ -336,7 +336,7 @@ int main(void){
                             if(walls.at(i).moveable && walls.at(i).isEnemy == false && walls.at(i).isNPC == false){
                                 DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, GREEN);
                             }else if (!walls.at(i).moveable && walls.at(i).isEnemy == false && walls.at(i).isNPC == false){
-                                DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, BLUE);
+                                //DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, BLUE);
                             }else if (walls.at(i).isEnemy == true){
                                 DrawRectangle(walls[i].position.x,walls[i].position.y,walls[i].width, walls[i].height, RED);
                             }else if (walls.at(i).isNPC == true){
